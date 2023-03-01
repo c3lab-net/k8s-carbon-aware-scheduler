@@ -1,0 +1,59 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cas.master.carbon-api
+  labels:
+    app: carbon-api
+    project: carbon-aware-scheduler
+    component: master
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      project: carbon-aware-scheduler
+      component: master
+      app: carbon-api
+  template:
+    metadata:
+      labels:
+        project: carbon-aware-scheduler
+        component: master
+        app: carbon-api
+    spec:
+      containers:
+      - name: cas-master-carbon-api
+        image: gitlab-registry.nrp-nautilus.io/c3lab/carbon-aware-scheduler/master.carbon-api:0.1
+        imagePullPolicy: Always
+        volumeMounts:
+          - mountPath: /etc/watttime
+            name: secret-vol-watttime
+        lifecycle:
+          postStart:
+            exec:
+              command: [ "sh", "-c", "ln -s /etc/watttime/watttime.ini /api/external/watttime/" ]
+        ports:
+          - containerPort: 8000
+        resources:
+          limits:
+            memory: 1Gi
+            cpu: "1"
+          requests:
+            memory: 512Mi
+            cpu: 500m
+      volumes:
+      - name: secret-vol-watttime
+        secret:
+          secretName: cas-carbonapi-watttime-ini
+      imagePullSecrets:
+        - name: regcred
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+              - matchExpressions:
+                  - key: topology.kubernetes.io/region
+                    operator: In
+                    values:
+                      - "us-west"
+                      - "us-central"
+                      - "us-east"
