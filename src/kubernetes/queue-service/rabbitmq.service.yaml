@@ -1,0 +1,16 @@
+# Source: https://raw.githubusercontent.com/kubernetes/kubernetes/release-1.3/examples/celery-rabbitmq/rabbitmq-service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: job-queue
+    project: carbon-aware-scheduler
+    component: rabbitmq
+  name: cas-rabbitmq-job-queue
+spec:
+  ports:
+  - port: 5672
+  selector:
+    app: job-queue
+    project: carbon-aware-scheduler
+    component: rabbitmq

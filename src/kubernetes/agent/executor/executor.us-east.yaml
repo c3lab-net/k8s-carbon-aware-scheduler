@@ -1,0 +1,52 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cas.agent.executor.us-east
+  labels:
+    app: executor
+    project: carbon-aware-scheduler
+    component: executor
+    region: us-east
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: executor
+      project: carbon-aware-scheduler
+      component: executor
+      region: us-east
+  template:
+    metadata:
+      labels:
+        app: executor
+        project: carbon-aware-scheduler
+        component: executor
+        region: us-east
+    spec:
+      containers:
+      - name: cas-agent-executor-us-east
+        image: gitlab-registry.nrp-nautilus.io/c3lab/carbon-aware-scheduler/agent.executor:0.1
+        imagePullPolicy: Always
+        env:
+        - name: BROKER_URL
+          value: amqp://guest:guest@cas-rabbitmq-job-queue:5672
+        - name: QUEUE
+          value: job-queue.us-east
+        resources:
+          limits:
+            memory: 256Mi
+            cpu: 1
+          requests:
+            memory: 256Mi
+            cpu: 500m
+      imagePullSecrets:
+        - name: regcred
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+              - matchExpressions:
+                  - key: topology.kubernetes.io/region
+                    operator: In
+                    values:
+                      - "us-east"
