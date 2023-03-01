@@ -1,0 +1,21 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: cas-job-scheduler-ingress
+  annotations:
+    kubernetes.io/ingress.class: haproxy
+spec:
+  rules:
+  - host: cas-job-scheduler.nrp-nautilus.io
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: cas-job-scheduler
+            port:
+              number: 80
+  tls:
+  - hosts:
+    - cas-job-scheduler.nrp-nautilus.io
