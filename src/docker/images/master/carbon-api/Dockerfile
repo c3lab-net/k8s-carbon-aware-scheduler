@@ -1,11 +1,8 @@
-FROM python:3-alpine
+FROM gitlab-registry.nrp-nautilus.io/c3lab/common/python-flask:bullseye
 MAINTAINER Yibo Guo <nil.yibo@gmail.com>
 
-RUN apk add --update coreutils rabbitmq-c-utils
-# RUN apk add --update python3 py3-pip
-RUN apk --no-cache add musl-dev g++
-RUN pip3 install numpy
-RUN pip3 install arrow pyyaml flask flask_restful psycopg2-binary webargs requests gunicorn marshmallow_dataclass
+RUN pip3 install numpy arrow requests pyyaml
+RUN pip3 install psycopg2-binary marshmallow_dataclass
 
 COPY energy-data/api /api
 WORKDIR /
