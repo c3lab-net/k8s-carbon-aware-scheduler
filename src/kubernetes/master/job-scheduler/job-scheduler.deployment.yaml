@@ -39,6 +39,11 @@ spec:
         envFrom:
           - configMapRef:
               name: cas-queue-config
+        env:
+        - name: CARBON_API_ENDPOINT
+          value: cas-carbon-api
+        ports:
+          - containerPort: 8000
         resources:
           limits:
             memory: 1Gi

@@ -3,8 +3,18 @@ MAINTAINER Yibo Guo <nil.yibo@gmail.com>
 
 # RUN pip3 install numpy arrow requests pyyaml
 RUN pip3 install "marshmallow-dataclass[enum,union]"
+RUN pip3 install requests pyyaml
 
-COPY job-scheduler.py /
-RUN chmod u+x /job-scheduler.py
+RUN apt-get update
+RUN apt-get install -y amqp-tools
 
-CMD [ "/job-scheduler.py" ]
+COPY api /api
+WORKDIR /
+CMD [   "gunicorn", \
+        "-b=:8000", \
+        "--workers=4", \
+        "--log-level=info", \
+        "--access-logfile", "-", \
+        "--access-logformat", "%({X-Real-IP}i)s %(l)s %(u)s %(t)s \"%(r)s\" %(s)s %(b)s \"%(f)s\" \"%(a)s\"", \
+        "api:create_app()" \
+]
