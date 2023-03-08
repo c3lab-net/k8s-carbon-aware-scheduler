@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: VAR_name
+spec:
+  storageClassName: VAR_storageClassName
+  accessModes:
+  - VAR_accessModes
+  resources:
+    requests:
+      storage: VAR_storage

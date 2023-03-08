@@ -1,0 +1,13 @@
+StorageClass	Filesystem Type	Region	AccessModes	Restrictions	Storage Type	Size
+rook-cephfs	CephFS	US West	ReadWriteMany		Spinning drives with NVME meta	2.5 PB
+rook-cephfs-central	CephFS	US Central	ReadWriteMany		Spinning drives with NVME meta	1 PB
+rook-cephfs-east	CephFS	US East	ReadWriteMany		Mixed	1 PB
+rook-cephfs-pacific	CephFS	Hawaii+Guam	ReadWriteMany		Spinning drives with NVME meta	384TB
+rook-cephfs-haosu	CephFS	US West (local)	ReadWriteMany	Hao Su and Ravi cluster	NVME	131 TB
+beegfs	BeeGFS	US West	ReadWriteMany			2PB
+rook-ceph-block (*default*)	RBD	US West	ReadWriteOnce		Spinning drives with NVME meta	2.5 PB
+rook-ceph-block-east	RBD	US East	ReadWriteOnce		Mixed	1 PB
+rook-ceph-block-pacific	RBD	Hawaii+Guam	ReadWriteOnce		Spinning drives with NVME meta	384 TB
+rook-ceph-block-central	RBD	US Central	ReadWriteOnce		Spinning drives with NVME meta	1 PB
+seaweedfs-storage-hdd	SeaweedFS	US West	ReadWriteMany		Spinning drives	24 TB
+seaweedfs-storage-nvme	SeaweedFS	US West	ReadWriteMany		NVME	22 TB
