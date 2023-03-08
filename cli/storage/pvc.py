@@ -5,11 +5,13 @@ import argparse
 import csv
 from dataclasses import dataclass
 from enum import Enum
+import json
 from time import sleep
+import shlex
 from shlex import quote
 import yaml
 
-from util import load_yaml, run_command
+from util import load_yaml, run_command, get_random_name
 
 @dataclass
 class PvcStorageClass:
@@ -66,6 +68,7 @@ class Action(str, Enum):
     CREATE = 'create'
     DELETE = 'delete'
     LIST = 'list'
+    VIEW = 'view'
 
     def __str__(self):
         return self.value
@@ -77,7 +80,7 @@ def parse_args():
     parser.add_argument('name', nargs='?', help='Name of the volume')
     parser.add_argument('size', nargs='?', type=str, help='Size of the volume')
     args = parser.parse_args()
-    if args.action in [Action.CREATE, Action.DELETE] and not args.name:
+    if args.action in [Action.CREATE, Action.DELETE, Action.VIEW] and not args.name:
         parser.error('name is required')
     if args.action == Action.CREATE and not args.size:
         parser.error('create requires a size.')
@@ -142,6 +145,26 @@ def exist_pvc(name):
             return False
         raise
 
+def view_pvc(name):
+    """Launch an interactive pod to view the pvc."""
+    print('Launching a temporary pod with PVC attached ...')
+    view_pvc_pod_config = load_yaml(
+        os.path.join(
+        os.path.dirname(os.path.realpath(__file__)),
+        "k8s.pod.view_pvc.yaml")
+    )
+    image = view_pvc_pod_config['spec']['containers'][0]['image']
+    for i, volume in enumerate(view_pvc_pod_config['spec']['volumes']):
+        if volume['name'] == 'pvc-vol':
+            view_pvc_pod_config['spec']['volumes'][i]['persistentVolumeClaim']['claimName'] = name
+    json_override = json.dumps(view_pvc_pod_config)
+    random_name = get_random_name()
+    cmd = shlex.split(f'kubectl run -i --rm --tty view-pvc-{quote(random_name)}'
+                        f' --overrides={quote(json_override)}'
+                        f' --image={quote(image)} --restart=Never')
+    print("+", shlex.join(cmd))
+    return os.execvp(cmd[0], cmd)
+
 def main():
     """Main function."""
     args = parse_args()
@@ -152,6 +175,8 @@ def main():
             delete_pvc(args.name)
         case Action.LIST:
             list_pvcs()
+        case Action.VIEW:
+            view_pvc(args.name)
         case _:
             raise ValueError(f'Invalid action {args.action}')
 
