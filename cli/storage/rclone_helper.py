@@ -1,11 +1,10 @@
 #!/usr/bin/env python3
 
 import json
-import uuid
 import sys
 from shlex import quote
 
-from util import run_command
+from util import run_command, get_random_name
 
 class RcloneHelper:
     """Helper class that runs rclone commands."""
@@ -20,7 +19,7 @@ class RcloneHelper:
     def create_bucket(self, endpoint: str = "us-west", name: str = None):
         """Create a new bucket."""
         if not name:
-            name = f'tmp.{uuid.uuid4().hex}'
+            name = f'tmp.{get_random_name()}'
         print(run_command(f'rclone mkdir {quote(endpoint)}:{quote(name)}', print_command=True))
         return (endpoint, name)
 

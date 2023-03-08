@@ -2,13 +2,12 @@
 
 import os
 import json
-import uuid
 import sys
 from time import sleep
 from shlex import quote
 
 from pvc import exist_pvc, create_pvc
-from util import run_command, load_file_as_str
+from util import run_command, load_file_as_str, get_random_name
 
 class K8sHelper:
     """A helper tool that runs kubernetes (k8s) commands."""
@@ -40,7 +39,7 @@ class K8sHelper:
 
     def _run_s3_pvc_transfer_job(self, pvc_name, src_path, dst_path):
         """Invoke an s3/pvc data transfer job and wait till it finishes."""
-        job_name = f's3-pvc-transfer-{uuid.uuid4().hex}'
+        job_name = f's3-pvc-transfer-{get_random_name()}'
         vars_to_substitute = {
             'VAR_job_name': job_name,
             'VAR_pvc_name': pvc_name,

@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 
+import uuid
 import sys
 import subprocess
 from subprocess import PIPE, STDOUT
@@ -41,3 +42,7 @@ def run_command(args: str, stdin: str = None, print_command=False) -> str:
                             f'{process.stdout}') \
             from ex
     return process.stdout
+
+def get_random_name():
+    """Get a random name."""
+    return uuid.uuid4().hex
