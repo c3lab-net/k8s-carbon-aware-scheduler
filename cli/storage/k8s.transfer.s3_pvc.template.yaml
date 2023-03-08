@@ -1,0 +1,41 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: VAR_job_name
+spec:
+  backoffLimit: 0
+  template:
+    spec:
+      # Secret setup: https://kubernetes.io/docs/concepts/configuration/secret/#use-case-pod-with-ssh-keys
+      volumes:
+        - name: secret-vol-cephs3-rclone-config
+          secret:
+            secretName: cas-cephs3-rclone-conf
+        - name: pvc-vol
+          persistentVolumeClaim:
+            claimName: VAR_pvc_name
+      containers:
+      - name: data-transfer-s3-pvc
+        image: gitlab-registry.nrp-nautilus.io/c3lab/common/rclone:1.61.1
+        # imagePullPolicy: Always
+        resources:
+          limits:
+            memory: 125Mi
+            cpu: 250m
+          requests:
+            memory: 100Mi
+            cpu: 100m
+        command: ["sh", "-c"]
+        args:
+          - >
+            cd /pvc-vol &&
+            rclone sync VAR_src VAR_dst
+        volumeMounts:
+          - name: secret-vol-cephs3-rclone-config
+            readOnly: true
+            mountPath: "/root/.config/rclone/"
+          - name: pvc-vol
+            mountPath: "/pvc-vol"
+      restartPolicy: Never
+      imagePullSecrets:
+        - name: regcred

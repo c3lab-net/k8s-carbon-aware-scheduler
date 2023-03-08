@@ -49,7 +49,6 @@ def load_pvc_storage_classes_from_config():
 def get_pvc_storage_class(region: str, filesystem_type: str) -> PvcStorageClass:
     """Get the first matching PVC storage class."""
     try:
-        print(PVC_STORAGE_CLASSES)
         return next(filter(lambda pvc:
             pvc.region == region and
             pvc.filesystem_type == filesystem_type and
@@ -67,7 +66,7 @@ class Action(str, Enum):
     CREATE = 'create'
     DELETE = 'delete'
     LIST = 'list'
-    
+
     def __str__(self):
         return self.value
 
@@ -131,6 +130,17 @@ def delete_pvc(name):
 def list_pvcs():
     """List all available PVCs."""
     print(run_command("kubectl get pvc", print_command=True))
+
+def exist_pvc(name):
+    """Check if a PVC exists."""
+    try:
+        run_command(f'kubectl get pvc {quote(name)} ' +
+                                quote('-o=jsonpath={.status.phase}'), print_command=True)
+        return True
+    except ValueError as ex:
+        if 'NotFound' in str(ex):
+            return False
+        raise
 
 def main():
     """Main function."""

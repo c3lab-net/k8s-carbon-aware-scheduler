@@ -14,6 +14,11 @@ def load_yaml(path):
         except yaml.YAMLError as ex:
             raise ValueError(f'Failed to load YAML file "{path}"') from ex
 
+def load_file_as_str(path):
+    """Load a file and return its content as a string."""
+    with open(path, 'r') as f:
+        return f.read()
+
 def run_command(args: str, stdin: str = None, print_command=False) -> str:
     """Run a given command and return combined stdout and stderr.
 
