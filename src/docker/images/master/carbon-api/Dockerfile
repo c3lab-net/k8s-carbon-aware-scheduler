@@ -1,4 +1,4 @@
-FROM gitlab-registry.nrp-nautilus.io/c3lab/common/python-flask:bullseye
+FROM gitlab-registry.nrp-nautilus.io/c3lab/common/python-flask:3.10-bullseye
 MAINTAINER Yibo Guo <nil.yibo@gmail.com>
 
 RUN pip3 install numpy arrow requests pyyaml
