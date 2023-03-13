@@ -3,7 +3,7 @@
 import sys
 
 print("Received message:")
-for line in sys.stdin.readlines():
-    print(line)
+message = sys.stdin.read()
+print(message)
 
-print("Done")
+print("--------------\n")
