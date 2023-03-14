@@ -20,6 +20,18 @@ spec:
         component: master
         app: job-scheduler
     spec:
+      initContainers:
+      - name: init-job-queues
+        image: gitlab-registry.nrp-nautilus.io/c3lab/common/rabbitmq-client:alpine
+        envFrom:
+          - configMapRef:
+              name: cas-queue-config
+        command: [ "sh", "-c" ]
+        args:
+          - |
+            for region in ${REGIONS//:/ }; do
+              /usr/bin/amqp-declare-queue --url=$BROKER_URL -q "$QUEUE_PERFIX.$region" -d
+            done
       containers:
       - name: cas-master-job-scheduler
         image: gitlab-registry.nrp-nautilus.io/c3lab/carbon-aware-scheduler/master.job-scheduler:0.1
