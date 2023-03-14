@@ -27,11 +27,12 @@ spec:
       - name: cas-agent-executor-us-central
         image: gitlab-registry.nrp-nautilus.io/c3lab/carbon-aware-scheduler/agent.executor:0.1
         imagePullPolicy: Always
+        envFrom:
+          - configMapRef:
+              name: cas-queue-config
         env:
-        - name: BROKER_URL
-          value: amqp://guest:guest@cas-rabbitmq-job-queue:5672
-        - name: QUEUE
-          value: job-queue.us-central
+        - name: REGION
+          value: us-central
         resources:
           limits:
             memory: 256Mi

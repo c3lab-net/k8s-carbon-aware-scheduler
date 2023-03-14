@@ -24,13 +24,9 @@ spec:
       - name: cas-master-job-scheduler
         image: gitlab-registry.nrp-nautilus.io/c3lab/carbon-aware-scheduler/master.job-scheduler:0.1
         imagePullPolicy: Always
-        env:
-        - name: BROKER_URL
-          value: amqp://guest:guest@cas-rabbitmq-job-queue:5672
-        - name: QUEUE_PERFIX
-          value: job-queue
-        - name: REGIONS
-          value: "us-west:us-central:us-east"
+        envFrom:
+          - configMapRef:
+              name: cas-queue-config
         resources:
           limits:
             memory: 1Gi

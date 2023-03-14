@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: cas-queue-config
+  labels:
+    project: carbon-aware-scheduler
+data:
+  BROKER_URL: amqp://guest:guest@cas-rabbitmq-job-queue:5672
+  QUEUE_PERFIX: job-queue
+  REGIONS: us-west:us-central:us-east
