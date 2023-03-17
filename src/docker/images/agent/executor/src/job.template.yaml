@@ -1,0 +1,27 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: VAR_job_name
+spec:
+  # backoffLimit: 0
+  template:
+    spec:
+      containers:
+      - name: VAR_container_name
+        image: VAR_image
+        # imagePullPolicy: Always
+        resources:
+          limits:
+            memory: VAR_limit_ram
+            cpu: VAR_limit_cpu
+          requests:
+            memory: VAR_request_ram
+            cpu: VAR_request_cpu
+        command: []
+        args: []
+        volumeMounts: []
+          # - name: pvc-vol
+          #   mountPath: "/pvc-vol"
+      restartPolicy: Never
+      imagePullSecrets:
+        - name: regcred

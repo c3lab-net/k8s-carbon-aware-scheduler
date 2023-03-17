@@ -23,6 +23,10 @@ spec:
         component: executor
         region: us-central
     spec:
+      volumes:
+      - name: secret-cas-serviceaccount-kube-config
+        secret:
+          secretName: cas-serviceaccount
       containers:
       - name: cas-agent-executor-us-central
         image: gitlab-registry.nrp-nautilus.io/c3lab/carbon-aware-scheduler/agent.executor:0.1
@@ -33,6 +37,10 @@ spec:
         env:
         - name: REGION
           value: us-central
+        volumeMounts:
+          - name: secret-cas-serviceaccount-kube-config
+            readOnly: true
+            mountPath: "/root/.kube/"
         resources:
           limits:
             memory: 256Mi
