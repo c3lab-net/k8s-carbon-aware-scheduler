@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 
+import uuid
 from flask import current_app
 from flask_restful import Resource
 from webargs.flaskparser import use_args
@@ -22,10 +23,21 @@ class JobSchduler(Resource):
     @use_args(marshmallow_dataclass.class_schema(JobRequest)())
     def post(self, job_request: JobRequest):
         current_app.logger.info(f'{__class__}.post({job_request})')
+        job_id = f'cas-{uuid.uuid4()}'
         best_location = self._get_best_location(job_request)
-        self._send_job_to_queue(best_location, yaml.dump(job_request))
+        self._send_job_to_queue(best_location, yaml.safe_dump({
+            'job_id': job_id,
+            'name': job_request.spec.name,
+            'image': job_request.spec.image,
+            'command': job_request.spec.command,
+            # 'max_delay': job_request.spec.max_delay,
+            'inputs': job_request.inputs,
+            'outputs': job_request.outputs,
+        }, default_flow_style=False))
         # TODO: wait for response, or return a request id
-        return {}, 201
+        return {
+            'job_id': job_id,
+        }, 201
 
     def _get_best_location(self, job_request: JobRequest):
         try:
