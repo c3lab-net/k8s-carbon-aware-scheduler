@@ -55,9 +55,34 @@ class JobLocation:
     latitude: float = field_with_validation(validate.Range(-90., 90.))
     longitude: float = field_with_validation(validate.Range(-180., 180.))
 
+def is_valid_resource_cpu(cpu: str|int) -> bool:
+    # Source: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/#meaning-of-cpu
+    if cpu is int:
+        return True
+    regex = re.compile(r'^[0-9.]+m?$')
+    return regex.match(cpu) is not None
+
+def is_valid_resource_memory(memory: str|int) -> bool:
+    # Source: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/#meaning-of-memory
+    if memory is int:
+        return True
+    regex = re.compile(r'^[0-9.]+(?:e-?[0-9]+)?(?:E|P|T|G|M|k|Ei|Pi|Ti|Gi|Mi|Ki)?$')
+    return regex.match(memory) is not None
+
+@dataclass
+class ContainerResource:
+    cpu: str|int = field_with_validation(is_valid_resource_cpu)
+    memory: str|int = field_with_validation(is_valid_resource_memory)
+
+@dataclass
+class ContainerResourceRequirement:
+    requests: ContainerResource
+    limits: ContainerResource
+
 @dataclass
 class JobRequest:
     spec: JobSpec
     original_location: Optional[str] = field_with_validation(validate.OneOf(AVAILABLE_LOCATIONS))
+    resources: Optional[ContainerResourceRequirement]
     inputs: dict[str, str] = field_with_validation(validate_mountpoints)
     outputs: dict[str, str] = field_with_validation(validate_mountpoints)

@@ -25,7 +25,7 @@ class JobSchduler(Resource):
         current_app.logger.info(f'{__class__}.post({job_request})')
         job_id = f'cas-{uuid.uuid4()}'
         best_location = self._get_best_location(job_request)
-        self._send_job_to_queue(best_location, yaml.safe_dump({
+        job_message = {
             'job_id': job_id,
             'name': job_request.spec.name,
             'image': job_request.spec.image,
@@ -33,7 +33,15 @@ class JobSchduler(Resource):
             # 'max_delay': job_request.spec.max_delay,
             'inputs': job_request.inputs,
             'outputs': job_request.outputs,
-        }, default_flow_style=False))
+        }
+        if job_request.resources:
+            job_message |= {
+                'resources.requests.cpu': job_request.resources.requests.cpu,
+                'resources.requests.memory': job_request.resources.requests.memory,
+                'resources.limits.cpu': job_request.resources.limits.cpu,
+                'resources.limits.memory': job_request.resources.limits.memory,
+            }
+        self._send_job_to_queue(best_location, yaml.safe_dump(job_message, default_flow_style=False))
         # TODO: wait for response, or return a request id
         return {
             'job_id': job_id,

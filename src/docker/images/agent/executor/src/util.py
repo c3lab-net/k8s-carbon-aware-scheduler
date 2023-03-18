@@ -6,6 +6,7 @@ import logging
 import shlex
 import subprocess
 from subprocess import PIPE, STDOUT
+from typing import Any
 
 def read_stdin():
     message = sys.stdin.read()
@@ -45,3 +46,6 @@ def run_command(args: str, stdin: str = None, print_command=False) -> str:
                             f'{process.stdout}') \
             from ex
     return process.stdout
+
+def get_dict_value_or_default(d: dict, key: Any, default: Any) -> Any:
+    return d[key] if key in d else default

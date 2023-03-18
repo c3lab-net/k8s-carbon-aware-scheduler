@@ -25,10 +25,10 @@ def create_job_config(request):
     container['name'] = f'{job_id}-container1'
     container['image'] = request['image']
     container['command'] = request['command']
-    container['resources']['requests']['memory'] = '128Mi'
-    container['resources']['limits']['memory'] = '128Mi'
-    container['resources']['requests']['cpu'] = '250m'
-    container['resources']['limits']['cpu'] = '500m'
+    container['resources']['requests']['cpu'] = get_dict_value_or_default(request, 'resources.requests.cpu', '1')
+    container['resources']['requests']['memory'] = get_dict_value_or_default(request, 'resources.requests.memory', '256Mi')
+    container['resources']['limits']['cpu'] = get_dict_value_or_default(request, 'resources.limits.cpu', '1')
+    container['resources']['limits']['memory'] = get_dict_value_or_default(request, 'resources.requests.memory', '256Mi')
     volume_mounts = []
     for mount_path, pvc_name in request['inputs'] | request['outputs']:
         volume_mounts.append({
