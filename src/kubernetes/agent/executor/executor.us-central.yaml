@@ -43,11 +43,11 @@ spec:
             mountPath: "/root/.kube/"
         resources:
           limits:
-            memory: 256Mi
+            memory: 512Mi
             cpu: "1"
           requests:
-            memory: 256Mi
-            cpu: 500m
+            memory: 512Mi
+            cpu: "1"
       imagePullSecrets:
         - name: regcred
       affinity:
