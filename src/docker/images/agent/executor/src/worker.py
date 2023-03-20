@@ -21,7 +21,8 @@ def create_job_config(request):
     container = job_config['spec']['template']['spec']['containers'][0]
     container['name'] = f'{job_id}-container1'
     container['image'] = request['image']
-    container['command'] = request['command']
+    container['command'] = [ 'sh', '-c' ]
+    container['args'] = [ '\n'.join(request['command']) ]
     container['resources']['requests']['cpu'] = get_dict_value_or_default(request, 'resources.requests.cpu', '1')
     container['resources']['requests']['memory'] = get_dict_value_or_default(request, 'resources.requests.memory', '256Mi')
     container['resources']['limits']['cpu'] = get_dict_value_or_default(request, 'resources.limits.cpu', '1')
