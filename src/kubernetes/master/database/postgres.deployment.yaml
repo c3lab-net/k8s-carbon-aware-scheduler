@@ -1,0 +1,51 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cas.master.database
+  labels:
+    app: database
+    project: carbon-aware-scheduler
+    component: master
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: database
+      project: carbon-aware-scheduler
+      component: master
+  template:
+    metadata:
+      labels:
+        app: database
+        project: carbon-aware-scheduler
+        component: master
+    spec:
+      containers:
+        - name: postgres
+          image: postgres:14
+          imagePullPolicy: IfNotPresent
+          command: [ "sh", "-c" ]
+          args:
+            - >
+              sed -i -r 's/#huge_pages.*?/huge_pages = off/g' /usr/share/postgresql/postgresql.conf.sample &
+              docker-entrypoint.sh postgres
+          # Fix for huge page error: https://github.com/docker-library/postgres/issues/451#issuecomment-447472044
+          ports:
+            - containerPort: 5432
+          envFrom:
+            - secretRef:
+                name: cas-master-database
+          volumeMounts:
+            - mountPath: /var/lib/postgresql/data
+              name: postgresdata
+          resources:
+            requests:
+              cpu: 250m
+              memory: 1Gi
+            limits:
+              cpu: "1"
+              memory: 1Gi
+      volumes:
+        - name: postgresdata
+          persistentVolumeClaim:
+            claimName: cas-master-database
