@@ -8,9 +8,6 @@ import traceback
 
 from util import *
 
-logging.basicConfig(format='%(asctime)s [%(levelname)s] %(message)s',
-                    level=logging.INFO, datefmt='%m/%d/%Y %I:%M:%S %p')
-
 def get_job_template():
     return load_yaml(os.path.join(
         os.path.dirname(os.path.realpath(__file__)),
@@ -66,4 +63,6 @@ def main():
         save_job_status(request['job_id'], str(ex))
 
 if __name__ == '__main__':
+    logging.basicConfig(format='%(asctime)s [%(levelname)s] %(message)s',
+                        level=logging.INFO, datefmt='%m/%d/%Y %I:%M:%S %p')
     main()
