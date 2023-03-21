@@ -27,7 +27,7 @@ build_image()
 cwd="$(pwd)"
 for f in **/Dockerfile; do
     relpath=$(dirname "$f")
-    component="${relpath:s/\//.}"
+    component="${relpath:gs/\//.}"
     cd "$relpath" && build_image carbon-aware-scheduler "$component" "$VERSION"
     cd "$cwd"
 done
