@@ -3,10 +3,12 @@
 import os
 import yaml
 import logging
+import json
 from shlex import quote
 import traceback
 
 from util import *
+from postgres import *
 
 def get_job_template():
     return load_yaml(os.path.join(
@@ -47,8 +49,18 @@ def create_job(job_config):
                             quote('-o=jsonpath={.status}'), print_command=False)
 
 def save_job_status(job_id, status):
-    logging.warning(f'TODO: save job status. Job {job_id}: {status}')
-    # raise NotImplementedError()
+    logging.info(f'Saving job {job_id} status: {status}')
+    try:
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        if 'completionTime' in status:
+            psql_execute_list(cursor, 'INSERT INTO JobHistory VALUES', [
+                (job_id, 'Complete', status['completionTime'])
+            ])
+        else:
+            raise NotImplementedError(f'Unhandled status: {json.dumps(status)}')
+    except Exception as ex:
+        raise ValueError(f'Failed to save job status. job_id={job_id}, status={status}.') from ex
 
 def main():
     request = read_stdin()

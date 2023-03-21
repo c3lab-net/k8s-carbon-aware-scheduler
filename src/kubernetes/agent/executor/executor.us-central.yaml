@@ -34,6 +34,8 @@ spec:
         envFrom:
           - configMapRef:
               name: cas-queue-config
+          - secretRef:
+              name: cas-master-database
         env:
         - name: REGION
           value: us-central

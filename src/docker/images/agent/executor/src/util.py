@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 
+import os
 import sys
 import yaml
 import logging
@@ -7,6 +8,9 @@ import shlex
 import subprocess
 from subprocess import PIPE, STDOUT
 from typing import Any
+
+def get_env_var(key):
+    return os.environ[key]
 
 def read_stdin():
     message = sys.stdin.read()
