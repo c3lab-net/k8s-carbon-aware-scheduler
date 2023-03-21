@@ -1,0 +1,33 @@
+apiVersion: v1
+kind: Pod
+spec:
+  containers:
+  - name: cas-master-database-init
+    image: gitlab-registry.nrp-nautilus.io/c3lab/carbon-aware-scheduler/master.database.init:0.1
+    # imagePullPolicy: Always
+    command: [ "sh" ]
+    stdin: true
+    stdinOnce: true
+    tty: true
+    env:
+      - name: PGHOST
+        value: cas-master-database
+      - name: PGDATABASE
+        value: $(POSTGRES_DB)
+      - name: PGUSER
+        value: $(POSTGRES_USER)
+      - name: PGPASSWORD
+        value: $(POSTGRES_PASSWORD)
+    envFrom:
+      - secretRef:
+          name: cas-master-database
+    resources:
+      limits:
+        memory: 256Mi
+        cpu: "1"
+      requests:
+        memory: 256Mi
+        cpu: 500m
+  restartPolicy: Never
+  imagePullSecrets:
+    - name: regcred
