@@ -10,6 +10,7 @@ import yaml
 from api.models.job_request import JobRequest
 from api.helpers.carbon_api_client import CarbonApiClient
 from api.helpers.job_queue import JobQueue
+from api.helpers.postgres import *
 from api.config import REGIONS as AVAILABLE_LOCATIONS
 
 g_carbon_api_client = CarbonApiClient()
@@ -24,6 +25,7 @@ class JobSchduler(Resource):
     def post(self, job_request: JobRequest):
         current_app.logger.info(f'{__class__}.post({job_request})')
         job_id = f'cas-{uuid.uuid4()}'
+        self._save_job_request(job_id, job_request)
         best_location = self._get_best_location(job_request)
         job_message = {
             'job_id': job_id,
@@ -59,6 +61,15 @@ class JobSchduler(Resource):
         except Exception:
             current_app.logger.warning('Failed to obtain best location to run job, returning default ...', exc_info=True)
             return AVAILABLE_LOCATIONS[0]
+
+    def _save_job_request(self, job_id, job_request: JobRequest):
+        logging.info(f'Saving job request with job_id={job_id}:\n{yaml.safe_dump(job_request)}')
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        result = psql_execute_list(cursor, 'INSERT INTO JobRequest (job_id, name, image, command, max_delay) VALUES', [
+            (job_id, job_request.spec.name, job_request.spec.image, ' '.join(job_request.spec.command), job_request.spec.max_delay)
+        ])
+        logging.debug(result)
 
     def _send_job_to_queue(self, region, message):
         try:

@@ -3,7 +3,7 @@ MAINTAINER Yibo Guo <nil.yibo@gmail.com>
 
 # RUN pip3 install numpy arrow requests pyyaml
 RUN pip3 install "marshmallow-dataclass[enum,union]"
-RUN pip3 install requests pyyaml
+RUN pip3 install requests pyyaml psycopg2-binary
 
 RUN apt-get update
 RUN apt-get install -y amqp-tools
