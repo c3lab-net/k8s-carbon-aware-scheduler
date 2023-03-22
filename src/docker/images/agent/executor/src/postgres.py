@@ -7,9 +7,9 @@ from typing import Sequence, Any, Union
 
 from util import get_env_var
 
-def get_db_connection(host='/var/run/postgresql/', database=None):
+def get_db_connection(host=None, database=None):
     try:
-        conn = psycopg2.connect(host=host,
+        conn = psycopg2.connect(host=host if host else get_env_var('POSTGRES_HOST'),
                                 database=database if database else get_env_var('POSTGRES_DB'),
                                 user=get_env_var('POSTGRES_USER'),
                                 password=get_env_var('POSTGRES_PASSWORD'))

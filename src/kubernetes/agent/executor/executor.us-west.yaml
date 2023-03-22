@@ -37,8 +37,10 @@ spec:
           - secretRef:
               name: cas-master-database
         env:
-        - name: REGION
-          value: us-west
+          - name: REGION
+            value: us-west
+          - name: POSTGRES_HOST
+            value: cas-master-database
         volumeMounts:
           - name: secret-cas-serviceaccount-kube-config
             readOnly: true
