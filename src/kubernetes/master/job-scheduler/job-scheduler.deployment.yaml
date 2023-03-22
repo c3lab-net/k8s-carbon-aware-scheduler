@@ -44,8 +44,10 @@ spec:
           - secretRef:
               name: cas-master-database
         env:
-        - name: CARBON_API_ENDPOINT
-          value: cas-carbon-api
+          - name: CARBON_API_ENDPOINT
+            value: cas-carbon-api
+          - name: POSTGRES_HOST
+            value: cas-master-database
         ports:
           - containerPort: 8000
         resources:
