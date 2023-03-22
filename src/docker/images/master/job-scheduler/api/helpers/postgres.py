@@ -9,12 +9,13 @@ from flask import current_app
 
 from api.util import get_env_var
 
-def get_db_connection(host=None, database=None):
+def get_db_connection(host=None, database=None, autocommit=False):
     try:
         conn = psycopg2.connect(host=host if host else get_env_var('POSTGRES_HOST'),
                                 database=database if database else get_env_var('POSTGRES_DB'),
                                 user=get_env_var('POSTGRES_USER'),
                                 password=get_env_var('POSTGRES_PASSWORD'))
+        conn.autocommit = autocommit
         return conn
     except Exception as ex:
         raise ValueError("Failed to connect to database.") from ex
