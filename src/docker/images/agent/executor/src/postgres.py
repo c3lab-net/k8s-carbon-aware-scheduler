@@ -30,14 +30,13 @@ def psql_execute_scalar(cursor: psycopg2.extensions.cursor, query: str, args: Se
 
 
 def psql_execute_list(cursor: psycopg2.extensions.cursor, query: str,
-                      args: Union[Sequence[Any], dict[str, str]] = None) -> list[tuple]:
+                      args: Union[Sequence[Any], dict[str, str]] = None, fetch_result=False) -> list[tuple]:
     """Execute the psql query and return all rows as a list of tuples."""
     try:
         cursor.execute(query, args)
-        result = cursor.fetchall()
+        return cursor.fetchall() if fetch_result else cursor.rowcount
     except psycopg2.Error as ex:
         logging.error(f'psql_execute_scalar("{query}", {args}): {ex}')
         logging.error(traceback.format_exc())
         raise ValueError("Failed to execute SQL query.")
-    return result
 
