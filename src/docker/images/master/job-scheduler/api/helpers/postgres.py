@@ -5,6 +5,7 @@ import psycopg2.extras
 import logging
 import traceback
 from typing import Sequence, Any, Union
+from flask import current_app
 
 from api.util import get_env_var
 
@@ -24,8 +25,8 @@ def psql_execute_scalar(cursor: psycopg2.extensions.cursor, query: str, args: Se
         cursor.execute(query, args)
         result = cursor.fetchone()
     except psycopg2.Error as ex:
-        logging.error(f'psql_execute_scalar("{query}", {args}): {ex}')
-        logging.error(traceback.format_exc())
+        current_app.logger.error(f'psql_execute_scalar("{query}", {args}): {ex}')
+        current_app.logger.error(traceback.format_exc())
         raise ValueError("Failed to execute SQL query.")
     return result[0] if result is not None else None
 
@@ -37,8 +38,8 @@ def psql_execute_list(cursor: psycopg2.extensions.cursor, query: str,
         cursor.execute(query, args)
         result = cursor.fetchall()
     except psycopg2.Error as ex:
-        logging.error(f'psql_execute_scalar("{query}", {args}): {ex}')
-        logging.error(traceback.format_exc())
+        current_app.logger.error(f'psql_execute_scalar("{query}", {args}): {ex}')
+        current_app.logger.error(traceback.format_exc())
         raise ValueError("Failed to execute SQL query.")
     return result
 
@@ -48,7 +49,7 @@ def psql_execute_values(cursor: psycopg2.extensions.cursor, query: str,
     try:
         result = psycopg2.extras.execute_values(cursor, query, args, fetch=True)
     except psycopg2.Error as ex:
-        logging.error(f'psql_execute_values("{query}", {args}): {ex}')
-        logging.error(traceback.format_exc())
+        current_app.logger.error(f'psql_execute_values("{query}", {args}): {ex}')
+        current_app.logger.error(traceback.format_exc())
         raise ValueError("Failed to execute SQL query.")
     return result
