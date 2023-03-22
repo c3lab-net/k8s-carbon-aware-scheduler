@@ -75,20 +75,37 @@ def save_job_from_status_json(job_id, status):
     except Exception as ex:
         raise ValueError(f'Failed to save job status. job_id={job_id}, status={status}.') from ex
 
-def main():
-    request = read_stdin()
-    logging.info(f'Received message:\n%s', yaml.safe_dump(request, default_flow_style=False))
-    assert 'job_id' in request, 'Missing job_id in request:\n' + request
-    job_id = request['job_id']
+def get_job_request_from_queue():
     try:
-        save_job_history(job_id, 'Dequeued', datetime.now(timezone.utc))
-        job_config = create_job_config(request)
-        status = create_job(job_config)
-        save_job_from_status_json(job_id, status)
+        message = run_command('/usr/bin/amqp-consume --url=$BROKER_URL -q "$QUEUE_PERFIX.$REGION" -c 1 cat',
+                                print_command=True)
     except Exception as ex:
-        logging.error(f'Failed to handle job request for job_id={job_id}: %s', str(ex))
+        logging.error('Failed to get job request: %s', ex)
         logging.error(traceback.format_exc())
-        # save_job_status(job_id, str(ex))
+        return None
+
+    try:
+        return yaml.safe_load(message)
+    except yaml.error.YAMLError as ex:
+        logging.error('Failed to load YAML from queue message:\n%s', message)
+        logging.error(traceback.format_exc())
+        return None
+
+def main():
+    while True:
+        request = get_job_request_from_queue()
+        logging.info(f'Received message:\n%s', yaml.safe_dump(request, default_flow_style=False))
+        assert 'job_id' in request, 'Missing job_id in request:\n' + request
+        job_id = request['job_id']
+        try:
+            save_job_history(job_id, 'Dequeued', datetime.now(timezone.utc))
+            job_config = create_job_config(request)
+            status = create_job(job_config)
+            save_job_from_status_json(job_id, status)
+        except Exception as ex:
+            logging.error(f'Failed to handle job request for job_id={job_id}: %s', str(ex))
+            logging.error(traceback.format_exc())
+            # save_job_status(job_id, str(ex))
 
 if __name__ == '__main__':
     logging.basicConfig(format='%(asctime)s [%(levelname)s] %(message)s',

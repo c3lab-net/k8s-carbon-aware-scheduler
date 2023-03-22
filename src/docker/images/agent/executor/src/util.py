@@ -12,14 +12,6 @@ from typing import Any
 def get_env_var(key):
     return os.environ[key]
 
-def read_stdin():
-    message = sys.stdin.read()
-    try:
-        request = yaml.safe_load(message)
-    except yaml.error.YAMLError as ex:
-        raise ValueError(f'Failed to load YAML from stdin message:\n{message}') from ex
-    return request
-
 def load_yaml(path):
     """Load a YAML file."""
     with open(path, 'r') as f:
