@@ -77,8 +77,8 @@ def save_job_from_status_json(job_id, status):
 
 def get_job_request_from_queue():
     try:
-        message = run_command('/usr/bin/amqp-consume --url=$BROKER_URL -q "$QUEUE_PERFIX.$REGION" -c 1 cat',
-                                print_command=True)
+        logging.info('Waiting for new job request ...')
+        message = run_command('./get_message_from_queue.sh')
     except Exception as ex:
         logging.error('Failed to get job request: %s', ex)
         logging.error(traceback.format_exc())
@@ -95,7 +95,9 @@ def main():
     while True:
         request = get_job_request_from_queue()
         logging.info(f'Received message:\n%s', yaml.safe_dump(request, default_flow_style=False))
-        assert 'job_id' in request, 'Missing job_id in request:\n' + request
+        if request is None or 'job_id' not in request:
+            logging.error('Missing job_id in request:\n%s', request)
+            continue
         job_id = request['job_id']
         try:
             save_job_history(job_id, 'Dequeued', datetime.now(timezone.utc))
