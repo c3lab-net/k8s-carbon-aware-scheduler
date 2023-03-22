@@ -52,13 +52,13 @@ def save_job_status(job_id, status):
     logging.info(f'Saving job {job_id} status: {status}')
     try:
         conn = get_db_connection()
-        cursor = conn.cursor()
-        if 'completionTime' in status:
-            psql_execute_list(cursor, 'INSERT INTO JobHistory VALUES', [
-                (job_id, 'Complete', status['completionTime'])
-            ])
-        else:
-            raise NotImplementedError(f'Unhandled status: {json.dumps(status)}')
+        with conn, conn.cursor() as cursor:
+            if 'completionTime' in status:
+                psql_execute_list(cursor, 'INSERT INTO JobHistory VALUES', [
+                    (job_id, 'Complete', status['completionTime'])
+                ])
+            else:
+                raise NotImplementedError(f'Unhandled status: {json.dumps(status)}')
     except Exception as ex:
         raise ValueError(f'Failed to save job status. job_id={job_id}, status={status}.') from ex
 

@@ -66,10 +66,10 @@ class JobSchduler(Resource):
         current_app.logger.info(f'Saving job request with job_id={job_id}:\n{yaml.dump(job_request)}')
         try:
             conn = get_db_connection()
-            cursor = conn.cursor()
-            result = psql_execute_values(cursor, 'INSERT INTO JobRequest (job_id, name, image, command, max_delay) VALUES %s', [
-                (job_id, job_request.spec.name, job_request.spec.image, ' '.join(job_request.spec.command), job_request.spec.max_delay)
-            ])
+            with conn, conn.cursor() as cursor:
+                result = psql_execute_values(cursor, 'INSERT INTO JobRequest (job_id, name, image, command, max_delay) VALUES %s', [
+                    (job_id, job_request.spec.name, job_request.spec.image, ' '.join(job_request.spec.command), job_request.spec.max_delay)
+                ])
             current_app.logger.debug(result)
         except Exception as ex:
             raise ValueError(f'Failed to save job request (job_id={job_id}).') from ex
