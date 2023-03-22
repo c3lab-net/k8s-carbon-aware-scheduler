@@ -1,6 +1,6 @@
 #!/bin/zsh
 
-cd "$(dirname "$0")"
+cd "$(dirname "$(realpath "$0")")"
 
 yaml_file=postgres.client.yaml
 image="$(cat $yaml_file | yq '.spec.containers[0].image')"
