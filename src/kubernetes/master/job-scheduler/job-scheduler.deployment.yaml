@@ -41,6 +41,8 @@ spec:
         envFrom:
           - configMapRef:
               name: cas-queue-config
+          - secretRef:
+              name: cas-master-database
         env:
         - name: CARBON_API_ENDPOINT
           value: cas-carbon-api
