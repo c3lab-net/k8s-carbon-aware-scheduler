@@ -24,7 +24,7 @@ class JobSchduler(Resource):
     @use_args(marshmallow_dataclass.class_schema(JobRequest)())
     def post(self, job_request: JobRequest):
         current_app.logger.info(f'{__class__}.post({job_request})')
-        job_id = f'cas-{uuid.uuid4()}'
+        job_id = str(uuid.uuid4())
         self._save_job_request(job_id, job_request)
         best_location = self._get_best_location(job_request)
         job_message = {
@@ -67,7 +67,7 @@ class JobSchduler(Resource):
         try:
             conn = get_db_connection()
             cursor = conn.cursor()
-            result = psql_execute_list(cursor, 'INSERT INTO JobRequest (job_id, name, image, command, max_delay) VALUES', [
+            result = psql_execute_values(cursor, 'INSERT INTO JobRequest (job_id, name, image, command, max_delay) VALUES %s', [
                 (job_id, job_request.spec.name, job_request.spec.image, ' '.join(job_request.spec.command), job_request.spec.max_delay)
             ])
             current_app.logger.debug(result)

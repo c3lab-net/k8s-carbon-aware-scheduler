@@ -44,12 +44,14 @@ def psql_execute_list(cursor: psycopg2.extensions.cursor, query: str,
     return result
 
 def psql_execute_values(cursor: psycopg2.extensions.cursor, query: str,
-                      args: Union[Sequence[Any], dict[str, str]] = None) -> list[tuple]:
+                      args: Sequence[Any] = None) -> list[tuple]:
     """Execute the psql query and return all rows as a list of tuples."""
     try:
-        result = psycopg2.extras.execute_values(cursor, query, args, fetch=True)
+        psycopg2.extras.execute_values(cursor, query, args)
+        return cursor.rowcount
     except psycopg2.Error as ex:
         current_app.logger.error(f'psql_execute_values("{query}", {args}): {ex}')
         current_app.logger.error(traceback.format_exc())
         raise ValueError("Failed to execute SQL query.")
-    return result
+
+psycopg2.extras.register_uuid()
