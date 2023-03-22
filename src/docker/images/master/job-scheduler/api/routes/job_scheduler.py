@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 import uuid
+from datetime import datetime, timezone
 from flask import current_app
 from flask_restful import Resource
 from webargs.flaskparser import use_args
@@ -30,6 +31,7 @@ class JobSchduler(Resource):
         current_app.logger.info(f'{__class__}.post({job_request})')
         job_id = str(uuid.uuid4())
         self._save_job_request(job_id, job_request)
+        self._save_job_history(job_id, 'Created', datetime.now(timezone.utc))
         best_location = self._get_best_location(job_request)
         job_message = {
             'job_id': job_id,
@@ -48,6 +50,7 @@ class JobSchduler(Resource):
                 'resources.limits.memory': job_request.resources.limits.memory,
             }
         self._send_job_to_queue(best_location, yaml.safe_dump(job_message, default_flow_style=False))
+        self._save_job_history(job_id, 'Enqueued', datetime.now(timezone.utc))
         # TODO: wait for response, or return a request id
         return {
             'job_id': job_id,
@@ -70,11 +73,23 @@ class JobSchduler(Resource):
         current_app.logger.info(f'Saving job request with job_id={job_id}:\n{yaml.dump(job_request)}')
         try:
             cursor = self.dbconn.cursor()
-            psql_execute_values(cursor, 'INSERT INTO JobRequest (job_id, name, image, command, max_delay) VALUES %s', [
+            result = psql_execute_values(cursor, 'INSERT INTO JobRequest (job_id, name, image, command, max_delay) VALUES %s', [
                 (job_id, job_request.spec.name, job_request.spec.image, ' '.join(job_request.spec.command), job_request.spec.max_delay)
             ])
+            current_app.logger.debug(result)
         except Exception as ex:
             raise ValueError(f'Failed to save job request (job_id={job_id}).') from ex
+
+    def _save_job_history(self, job_id: str, event: str, timestamp: datetime):
+        current_app.logger.info(f'Saving job history with job_id={job_id}, event={event}, timestamp={timestamp}')
+        try:
+            cursor = self.dbconn.cursor()
+            result = psql_execute_list(cursor, 'INSERT INTO JobHistory (job_id, event, time) VALUES (%s, %s, %s)', [
+                job_id, event, timestamp
+            ])
+            current_app.logger.debug(result)
+        except Exception as ex:
+            raise ValueError(f'Failed to save job history (job_id={job_id}).') from ex
 
     def _send_job_to_queue(self, region, message):
         try:
