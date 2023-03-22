@@ -57,8 +57,15 @@ def save_job_status(job_id, status):
                 psql_execute_list(cursor, 'INSERT INTO JobHistory VALUES', [
                     (job_id, 'Complete', status['completionTime'])
                 ])
+            elif 'startTime' in status:
+                psql_execute_list(cursor, 'INSERT INTO JobHistory VALUES', [
+                    (job_id, 'Start', status['startTime'])
+                ])
             else:
-                raise NotImplementedError(f'Unhandled status: {json.dumps(status)}')
+                logging.error(f'Unhandled status: {json.dumps(status)}')
+                psql_execute_list(cursor, 'INSERT INTO JobHistory VALUES', [
+                    (job_id, 'Unknown', json.dumps(status))
+                ])
     except Exception as ex:
         raise ValueError(f'Failed to save job status. job_id={job_id}, status={status}.') from ex
 
@@ -73,7 +80,7 @@ def main():
     except Exception as ex:
         logging.error('Failed to handle job request: %s', str(ex))
         logging.error(traceback.format_exc())
-        save_job_status(request['job_id'], str(ex))
+        # save_job_status(request['job_id'], str(ex))
 
 if __name__ == '__main__':
     logging.basicConfig(format='%(asctime)s [%(levelname)s] %(message)s',
