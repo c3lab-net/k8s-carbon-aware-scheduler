@@ -6,6 +6,7 @@ import logging
 import json
 from shlex import quote
 import traceback
+from datetime import datetime, timezone
 
 from util import *
 from postgres import *
@@ -45,8 +46,9 @@ def create_job(job_config):
     print(run_command('kubectl create -f -', job_yaml, print_command=True))
 
     job_name = job_config['metadata']['name']
-    return run_command(f'kubectl get job {quote(job_name)} ' +
+    result = run_command(f'kubectl get job {quote(job_name)} ' +
                             quote('-o=jsonpath={.status}'), print_command=False)
+    return json.loads(result)
 
 def save_job_status(job_id, status):
     logging.info(f'Saving job {job_id} status: {status}')
@@ -64,7 +66,7 @@ def save_job_status(job_id, status):
             else:
                 logging.error(f'Unhandled status: {json.dumps(status)}')
                 psql_execute_list(cursor, 'INSERT INTO JobHistory VALUES', [
-                    (job_id, 'Unknown', json.dumps(status))
+                    (job_id, 'Unknown', datetime.now(tz=timezone.utc))
                 ])
     except Exception as ex:
         raise ValueError(f'Failed to save job status. job_id={job_id}, status={status}.') from ex
