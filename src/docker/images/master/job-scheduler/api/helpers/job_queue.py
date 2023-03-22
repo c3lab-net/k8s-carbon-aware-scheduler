@@ -3,6 +3,7 @@
 import time
 import random
 from datetime import datetime
+from flask import current_app
 
 from api.util import get_env_var, run_command_and_print_output
 from api.config import *
@@ -14,7 +15,7 @@ class JobQueue:
 
     def _init_job_queues(self):
         for region in self.regions:
-            print(f"Declaring queue for region {region} ...")
+            current_app.logger.info(f"Declaring queue for region {region} ...")
             run_command_and_print_output([
                 "/usr/bin/amqp-declare-queue",
                 "--url", BROKER_URL,
@@ -28,7 +29,7 @@ class JobQueue:
 
 
     def send_message_to_region(self, region: str, message: str):
-        print(f"Sending message to region {region}, len = {len(message)} ...")
+        current_app.logger.info(f"Sending message to region {region}, len = {len(message)} ...")
         run_command_and_print_output([
                 "/usr/bin/amqp-publish",
                 "--url", BROKER_URL,

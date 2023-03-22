@@ -6,6 +6,7 @@ import dataclasses
 from datetime import datetime, date, timedelta, time
 from enum import Enum
 from typing import Any, Sequence, Union
+from flask import current_app
 from flask.json import JSONEncoder
 
 def get_env_var(key):
@@ -14,9 +15,9 @@ def get_env_var(key):
 def run_command_and_print_output(cmd, input=None):
     call = subprocess.run(cmd, input=input, stdout=subprocess.PIPE, text=True)
     if call.stdout:
-        print(call.stdout)
+        current_app.logger.info(call.stdout)
     if call.stderr:
-        print(call.stderr, file=sys.stderr)
+        current_app.logger.info(call.stderr)
     call.check_returncode()
 
 class CustomJSONEncoder(JSONEncoder):
