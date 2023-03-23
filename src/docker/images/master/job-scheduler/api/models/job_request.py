@@ -12,23 +12,26 @@ from api.util import get_env_var
 from api.config import REGIONS as AVAILABLE_LOCATIONS
 from api.models.dataclass_extensions import *
 
-def is_valid_path(path: str) -> bool:
+def is_valid_mountpoint(path: str) -> bool:
     regex = re.compile(r'^(?:\/[\w.-]+)*\/?$')
     return regex.match(path) is not None
 
+def is_valid_pvc_url(url: str) -> bool:
+    regex = re.compile(r'^pvc://[\w.-]+$')
+    return regex.match(url) is not None
+
 def is_valid_s3_url(url: str) -> bool:
     pattern_region = "|".join(map(re.escape, AVAILABLE_LOCATIONS))
-    charset = r'[\w._-]+'
-    regex = re.compile(rf'^s3://({pattern_region}):({charset})((?:\/{charset})*\/?)$')
+    regex = re.compile(rf'^s3://(?:{pattern_region}):[\w.-]+(?:\/[\w.-]+)*\/?$')
     return regex.match(url) is not None
 
 def validate_mountpoints(d: dict[str, str]) -> bool:
     errors = []
-    for path, url in d.items():
-        if not is_valid_path(path):
-            errors.append(f'Invalid path "{path}"')
-        if not is_valid_s3_url(url):
-            errors.append(f'Invalid URL for "{path}": {url}')
+    for mountpoint, url in d.items():
+        if not is_valid_mountpoint(mountpoint):
+            errors.append(f'Invalid mountpoint "{mountpoint}"')
+        if not is_valid_s3_url(url) and not is_valid_pvc_url(url):
+            errors.append(f'Invalid URL for mounpoint "{mountpoint}": "{url}"')
     if len(errors) > 0:
         raise ValidationError('\n'.join(errors))
     else:
