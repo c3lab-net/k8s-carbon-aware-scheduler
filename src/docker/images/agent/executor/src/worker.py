@@ -68,6 +68,15 @@ def get_job_status_json(job_config):
     except Exception as ex:
         raise ValueError(f'Failed to get job status json: {ex}') from ex
 
+def get_last_event_time_from_status_json(status_json, event_predicate = lambda _: True):
+    try:
+        l_conditions = status_json['conditions']
+        filtered = filter(event_predicate, l_conditions)
+        sorted = sorted(filtered, key=lambda e: e['lastTransitionTime'])
+        return next(sorted, None)
+    except Exception as ex:
+        raise ValueError(f'Failed to get last event time from json status: {ex}') from ex
+
 def save_job_history(job_id: str, event: str, timestamp: datetime):
     logging.info(f'Saving job history with job_id={job_id}, event={event}, timestamp={timestamp}')
     try:
@@ -95,8 +104,12 @@ def save_job_config(job_id, job_config):
 def save_job_status_json(job_id, status):
     logging.info(f'kubectl job status for {job_id}: {status}')
     try:
-        if 'completionTime' in status:
+        if status.get('succeeded', 0) > 0 and 'completionTime' in status:
             save_job_history(job_id, 'Complete', status['completionTime'])
+        elif status.get('failed', 0) > 0:
+            filter_predicate = lambda e: e.get('status', None) is True and e.get('type', None) == 'Failed'
+            timestamp_failure = get_last_event_time_from_status_json(status, filter_predicate)
+            save_job_history(job_id, 'Failed', timestamp_failure)
         elif 'startTime' in status:
             save_job_history(job_id, 'Started', status['startTime'])
         else:
