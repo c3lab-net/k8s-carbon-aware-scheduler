@@ -114,7 +114,7 @@ class JobTracker:
         self.tracked_job_ids = set()
         self.m_job_last_status = {}
         self.update_lock = threading.Lock()
-        self.update_daemon = threading.Timer(update_frequency.total_seconds(), self._update_all_job_status)
+        self.update_daemon = RepeatTimer(update_frequency.total_seconds(), self._update_all_job_status)
         self.update_daemon.start()
 
     def track_job(self, job_id):
