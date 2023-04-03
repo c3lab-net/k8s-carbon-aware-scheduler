@@ -59,7 +59,7 @@ class JobSpec:
     name: str = field_with_validation(is_valid_name)
     image: str = field_with_validation(is_valid_image_name)
     command: list[str] = field()
-    max_delay: timedelta = field(metadata=metadata_timedelta_nonzero)
+    max_delay: timedelta = field(metadata=metadata_timedelta)
 
 @dataclass
 class JobLocation:
