@@ -39,8 +39,7 @@ class KubeHelper:
         try:
             l_conditions = status_json['conditions']
             filtered = filter(event_predicate, l_conditions)
-            sorted = sorted(filtered, key=lambda e: e['lastTransitionTime'])
-            return next(sorted, None)
+            return next(iter(sorted(filtered, key=lambda e: e['lastTransitionTime'])), None)
         except Exception as ex:
             raise ValueError(f'Failed to get last event time from json status: {ex}') from ex
 
