@@ -1,11 +1,14 @@
 #!/usr/bin/env python3
 
 import psycopg2
+import psycopg2.extras
 import logging
 import traceback
 from typing import Sequence, Any, Union
 
 from util import get_env_var
+
+Json = psycopg2.extras.Json
 
 def get_db_connection(host=None, database=None):
     try:

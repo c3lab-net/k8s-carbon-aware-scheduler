@@ -80,6 +80,18 @@ def save_job_history(job_id: str, event: str, timestamp: datetime):
     except Exception as ex:
         raise ValueError(f'Failed to save job history (job_id={job_id}).') from ex
 
+def save_job_config(job_id, job_config):
+    logging.info(f'Saving job config for {job_id}')
+    try:
+        conn = get_db_connection()
+        with conn, conn.cursor() as cursor:
+            result = psql_execute_list(cursor, 'INSERT INTO JobConfig (job_id, job_config) VALUES (%s, %s)', [
+                job_id, Json(job_config)
+            ])
+            logging.debug(result)
+    except Exception as ex:
+        raise ValueError(f'Failed to save job config (job_id={job_id}).') from ex
+
 def save_job_status_json(job_id, status):
     logging.info(f'kubectl job status for {job_id}: {status}')
     try:
@@ -120,6 +132,7 @@ def main():
         try:
             save_job_history(job_id, 'Dequeued', datetime.now(timezone.utc))
             job_config = create_job_config(request)
+            save_job_config(job_id, job_config)
             create_job(job_config)
             status_json = get_job_status_json(job_config)
             save_job_status_json(job_id, status_json)
