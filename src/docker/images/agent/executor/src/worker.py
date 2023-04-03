@@ -112,55 +112,65 @@ class JobTracker:
 
     def __init__(self, update_frequency = timedelta(minutes=1)):
         self.tracked_job_ids = set()
-        self.tracked_job_ids_lock = threading.Lock()
+        self.m_job_last_status = {}
+        self.update_lock = threading.Lock()
         self.update_daemon = threading.Timer(update_frequency.total_seconds(), self._update_all_job_status)
 
     def track_job(self, job_id):
         status = self._update_job_status(job_id)
         if status == 'Completed':
             return
-        with self.tracked_job_ids_lock:
+        with self.update_lock:
             self.tracked_job_ids.add(job_id)
+            self.m_job_last_status[job_id] = status
 
     def save_job_history(self, job_id: str, event: str, timestamp: datetime):
         logging.info(f'Saving job history with job_id={job_id}, event={event}, timestamp={timestamp}')
         try:
             conn = get_db_connection()
             with conn, conn.cursor() as cursor:
-                result = psql_execute_list(cursor, 'INSERT INTO JobHistory (job_id, event, time) VALUES (%s, %s, %s)', [
-                    job_id, event, timestamp
-                ])
+                result = psql_execute_list(cursor,
+                                            '''INSERT INTO JobHistory (job_id, event, time) VALUES (%s, %s, %s)
+                                                    ON CONFLICT(job_id, event) DO NOTHING;''',
+                                            [job_id, event, timestamp])
                 logging.debug(result)
         except Exception as ex:
             raise ValueError(f'Failed to save job history (job_id={job_id}).') from ex
 
-    def _update_job_status(self, job_id):
+    def _update_job_status(self, job_id, last_event = None):
         try:
+            logging.info(f'Updating job status of {job_id} ...')
             status_json = KubeHelper.get_job_status_json(job_id)
-            return self._save_job_status_json(job_id, status_json)
+            return self._save_job_status_json(job_id, status_json, last_event)
         except Exception as ex:
             raise ValueError(f'Failed to update job status of {job_id}: {ex}') from ex
 
     def _update_all_job_status(self):
+        logging.info('JobTracker daemon: updating all tracked jobs\' status ...')
         tracked_job_ids = self.tracked_job_ids
+        m_job_last_status = self.m_job_last_status
+        m_job_updated_status = {}
         jobs_to_remove = set()
         for job_id in tracked_job_ids:
             try:
-                status = self._update_job_status(job_id)
+                last_status = m_job_last_status[job_id]
+                status = self._update_job_status(job_id, last_status)
+                if status == 'Completed':
+                    jobs_to_remove.add(job_id)
+                if status != last_status:
+                    m_job_updated_status[job_id] = status
             except Exception as ex:
-                logging.error(f'JobTracker update daemon: {ex}')
+                logging.error(f'JobTracker daemon: {ex}')
                 logging.error(traceback.format_exc())
-            if status == 'Completed':
-                jobs_to_remove.add(job_id)
 
-        if len(jobs_to_remove) > 0:
+        if not jobs_to_remove and not m_job_updated_status:
             return
-        with self.tracked_job_ids_lock:
+        with self.update_lock:
             for job_id in jobs_to_remove:
                 self.tracked_job_ids.remove(job_id)
+            self.m_job_last_status.update(m_job_updated_status)
 
-    def _save_job_status_json(self, job_id, status):
-        logging.info(f'kubectl job status for {job_id}: {status}')
+    def _save_job_status_json(self, job_id, status, last_event):
         try:
             if status.get('succeeded', 0) > 0 and 'completionTime' in status:
                 event = 'Completed'
@@ -176,7 +186,9 @@ class JobTracker:
                 logging.error(f'Unhandled status for job {job_id}: {json.dumps(status)}')
                 event = 'Unknown'
                 timestamp = datetime.now(tz=timezone.utc)
-            self.save_job_history(job_id, event, timestamp)
+            logging.info(f'Job status of {job_id}: {event} at {timestamp}')
+            if event != last_event:
+                self.save_job_history(job_id, event, timestamp)
             return event
         except Exception as ex:
             raise ValueError(f'Failed to save job status. job_id={job_id}, status={status}.') from ex
