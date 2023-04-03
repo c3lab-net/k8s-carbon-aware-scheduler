@@ -39,8 +39,8 @@ class JobSchduler(Resource):
             'image': job_request.spec.image,
             'command': job_request.spec.command,
             # 'max_delay': job_request.spec.max_delay,
-            'inputs': job_request.inputs,
-            'outputs': job_request.outputs,
+            'inputs': job_request.get_parsed_mountpoints(job_request.inputs),
+            'outputs': job_request.get_parsed_mountpoints(job_request.outputs),
         }
         if job_request.resources:
             job_message |= {

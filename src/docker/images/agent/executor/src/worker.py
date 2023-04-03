@@ -31,7 +31,15 @@ def create_job_config(request):
     container['resources']['limits']['cpu'] = get_dict_value_or_default(request, 'resources.limits.cpu', '1')
     container['resources']['limits']['memory'] = get_dict_value_or_default(request, 'resources.requests.memory', '256Mi')
     volume_mounts = []
-    for mount_path, pvc_name in request['inputs'] | request['outputs']:
+    for mount_path, storage in request['inputs'] | request['outputs']:
+        [storage_type, paths] = storage
+        match storage_type:
+            case 'pvc':
+                [pvc_name] = paths
+            case 's3':
+                raise NotImplementedError('s3 storage is not yet supported')
+            case _:
+                raise NotImplementedError(f'Unhandled storage type {storage_type}')
         volume_mounts.append({
             'name': pvc_name,
             'mountPath': mount_path,

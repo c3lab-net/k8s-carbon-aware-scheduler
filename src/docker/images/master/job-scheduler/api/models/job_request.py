@@ -12,25 +12,34 @@ from api.util import get_env_var
 from api.config import REGIONS as AVAILABLE_LOCATIONS
 from api.models.dataclass_extensions import *
 
+PATTERN_REGION = "|".join(map(re.escape, AVAILABLE_LOCATIONS))
+REGEX_BY_STORAGE_TYPE: dict[str, re.Pattern] = {
+    'pvc': re.compile(r'^pvc://([\w.-]+)/?$'),
+    's3': re.compile(rf'^s3://({PATTERN_REGION}):([\w.-]+(?:\/[\w.-]+)*\/?)$'),
+}
+
+def parse_storage_url(url: str) -> tuple[str, list[str]]:
+    for storage_type, regex in REGEX_BY_STORAGE_TYPE.items():
+        m = regex.match(url)
+        if not m:
+            continue
+        return storage_type, m.groups()
+    return None, []
+
 def is_valid_mountpoint(path: str) -> bool:
     regex = re.compile(r'^(?:\/[\w.-]+)*\/?$')
     return regex.match(path) is not None
 
-def is_valid_pvc_url(url: str) -> bool:
-    regex = re.compile(r'^pvc://[\w.-]+$')
-    return regex.match(url) is not None
-
-def is_valid_s3_url(url: str) -> bool:
-    pattern_region = "|".join(map(re.escape, AVAILABLE_LOCATIONS))
-    regex = re.compile(rf'^s3://(?:{pattern_region}):[\w.-]+(?:\/[\w.-]+)*\/?$')
-    return regex.match(url) is not None
+def is_valid_storage_url(url: str) -> bool:
+    storage, _ = parse_storage_url(url)
+    return storage is not None
 
 def validate_mountpoints(d: dict[str, str]) -> bool:
     errors = []
     for mountpoint, url in d.items():
         if not is_valid_mountpoint(mountpoint):
             errors.append(f'Invalid mountpoint "{mountpoint}"')
-        if not is_valid_s3_url(url) and not is_valid_pvc_url(url):
+        if not is_valid_storage_url(url):
             errors.append(f'Invalid URL for mounpoint "{mountpoint}": "{url}"')
     if len(errors) > 0:
         raise ValidationError('\n'.join(errors))
@@ -89,3 +98,23 @@ class JobRequest:
     resources: Optional[ContainerResourceRequirement]
     inputs: dict[str, str] = field_with_validation(validate_mountpoints)
     outputs: dict[str, str] = field_with_validation(validate_mountpoints)
+
+    @validates_schema
+    def validate_input_output_nonoverlapping(self, data, **kwargs):
+        errors = dict()
+        if set(data['inputs'].keys()).intersection(set(data['outputs'].keys())):
+            error_message_duplicate_keys = 'Duplicate keys in inputs and outputs dictionary.'
+            errors['inputs'] = error_message_duplicate_keys
+            errors['outputs'] = error_message_duplicate_keys
+        if errors:
+            raise ValidationError(errors)
+
+    def get_parsed_mountpoints(self, input_or_output: dict[str, str]):
+        parsed_mountpoints = {}
+        for mountpoint, url in input_or_output:
+            storage_type, paths = parse_storage_url(url)
+            parsed_mountpoints[mountpoint] = {
+                'storage_type': storage_type,
+                'paths': paths,
+            }
+        return parsed_mountpoints
