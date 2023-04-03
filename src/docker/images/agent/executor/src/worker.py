@@ -18,59 +18,69 @@ def get_job_template():
 
 def create_job_config(request):
     logging.info('Creating job config ...')
-    job_id = request['job_id']
-    job_config = get_job_template()
-    job_config['metadata']['name'] = job_id
-    container = job_config['spec']['template']['spec']['containers'][0]
-    container['name'] = f'{job_id}-container1'
-    container['image'] = request['image']
-    container['command'] = [ 'sh', '-c' ]
-    container['args'] = [ '\n'.join(request['command']) ]
-    container['resources']['requests']['cpu'] = get_dict_value_or_default(request, 'resources.requests.cpu', '1')
-    container['resources']['requests']['memory'] = get_dict_value_or_default(request, 'resources.requests.memory', '256Mi')
-    container['resources']['limits']['cpu'] = get_dict_value_or_default(request, 'resources.limits.cpu', '1')
-    container['resources']['limits']['memory'] = get_dict_value_or_default(request, 'resources.requests.memory', '256Mi')
-    volume_mounts = []
-    for mount_path, storage in request['inputs'] | request['outputs']:
-        [storage_type, paths] = storage
-        match storage_type:
-            case 'pvc':
-                [pvc_name] = paths
-            case 's3':
-                raise NotImplementedError('s3 storage is not yet supported')
-            case _:
-                raise NotImplementedError(f'Unhandled storage type {storage_type}')
-        volume_mounts.append({
-            'name': pvc_name,
-            'mountPath': mount_path,
-        })
-    container['volumeMounts'] = volume_mounts
-    job_config['spec']['template']['spec']['containers'][0] = container
-    return job_config
+    try:
+        job_id = request['job_id']
+        job_config = get_job_template()
+        job_config['metadata']['name'] = job_id
+        container = job_config['spec']['template']['spec']['containers'][0]
+        container['name'] = f'{job_id}-container1'
+        container['image'] = request['image']
+        container['command'] = [ 'sh', '-c' ]
+        container['args'] = [ '\n'.join(request['command']) ]
+        container['resources']['requests']['cpu'] = get_dict_value_or_default(request, 'resources.requests.cpu', '1')
+        container['resources']['requests']['memory'] = get_dict_value_or_default(request, 'resources.requests.memory', '256Mi')
+        container['resources']['limits']['cpu'] = get_dict_value_or_default(request, 'resources.limits.cpu', '1')
+        container['resources']['limits']['memory'] = get_dict_value_or_default(request, 'resources.requests.memory', '256Mi')
+        volume_mounts = []
+        for mount_path, storage in request['inputs'] | request['outputs']:
+            [storage_type, paths] = storage
+            match storage_type:
+                case 'pvc':
+                    [pvc_name] = paths
+                case 's3':
+                    raise NotImplementedError('s3 storage is not yet supported')
+                case _:
+                    raise NotImplementedError(f'Unhandled storage type {storage_type}')
+            volume_mounts.append({
+                'name': pvc_name,
+                'mountPath': mount_path,
+            })
+        container['volumeMounts'] = volume_mounts
+        job_config['spec']['template']['spec']['containers'][0] = container
+        return job_config
+    except Exception as ex:
+        raise ValueError(f'Failed to create job config: {ex}') from ex
 
 def create_job(job_config):
     logging.info('Creating job using kubectl ...')
-    job_yaml = yaml.dump(job_config)
-    print(run_command('kubectl create -f -', job_yaml, print_command=True))
+    try:
+        job_yaml = yaml.dump(job_config)
+        print(run_command('kubectl create -f -', job_yaml, print_command=True))
+    except Exception as ex:
+        raise ValueError(f'Failed to create job: {ex}') from ex
 
-    job_name = job_config['metadata']['name']
-    result = run_command(f'kubectl get job {quote(job_name)} ' +
-                            quote('-o=jsonpath={.status}'), print_command=False)
-    return json.loads(result)
+def get_job_status_json(job_config):
+    try:
+        job_name = job_config['metadata']['name']
+        result = run_command(f'kubectl get job {quote(job_name)} ' +
+                                quote('-o=jsonpath={.status}'), print_command=False)
+        return json.loads(result)
+    except Exception as ex:
+        raise ValueError(f'Failed to get job status json: {ex}') from ex
 
 def save_job_history(job_id: str, event: str, timestamp: datetime):
-        logging.info(f'Saving job history with job_id={job_id}, event={event}, timestamp={timestamp}')
-        try:
-            conn = get_db_connection()
-            with conn, conn.cursor() as cursor:
-                result = psql_execute_list(cursor, 'INSERT INTO JobHistory (job_id, event, time) VALUES (%s, %s, %s)', [
-                    job_id, event, timestamp
-                ])
-                logging.debug(result)
-        except Exception as ex:
-            raise ValueError(f'Failed to save job history (job_id={job_id}).') from ex
+    logging.info(f'Saving job history with job_id={job_id}, event={event}, timestamp={timestamp}')
+    try:
+        conn = get_db_connection()
+        with conn, conn.cursor() as cursor:
+            result = psql_execute_list(cursor, 'INSERT INTO JobHistory (job_id, event, time) VALUES (%s, %s, %s)', [
+                job_id, event, timestamp
+            ])
+            logging.debug(result)
+    except Exception as ex:
+        raise ValueError(f'Failed to save job history (job_id={job_id}).') from ex
 
-def save_job_from_status_json(job_id, status):
+def save_job_status_json(job_id, status):
     logging.info(f'kubectl job status for {job_id}: {status}')
     try:
         if 'completionTime' in status:
@@ -110,8 +120,9 @@ def main():
         try:
             save_job_history(job_id, 'Dequeued', datetime.now(timezone.utc))
             job_config = create_job_config(request)
-            status = create_job(job_config)
-            save_job_from_status_json(job_id, status)
+            create_job(job_config)
+            status_json = get_job_status_json(job_config)
+            save_job_status_json(job_id, status_json)
         except Exception as ex:
             logging.error(f'Failed to handle job request for job_id={job_id}: %s', str(ex))
             logging.error(traceback.format_exc())
