@@ -115,6 +115,7 @@ class JobTracker:
         self.m_job_last_status = {}
         self.update_lock = threading.Lock()
         self.update_daemon = RepeatTimer(update_frequency.total_seconds(), self._update_all_job_status)
+        self.update_in_progress = False
         self.update_daemon.start()
 
     def track_job(self, job_id):
@@ -147,6 +148,10 @@ class JobTracker:
             raise ValueError(f'Failed to update job status of {job_id}: {ex}') from ex
 
     def _update_all_job_status(self):
+        if self.update_in_progress:
+            logging.info('JobTracker daemon: skipping as update is already running ...')
+            return
+        self.update_in_progress = True
         logging.info('JobTracker daemon: updating all tracked jobs\' status ...')
         tracked_job_ids = self.tracked_job_ids
         m_job_last_status = self.m_job_last_status
@@ -164,12 +169,15 @@ class JobTracker:
                 logging.error(f'JobTracker daemon: {ex}')
                 logging.error(traceback.format_exc())
 
-        if not jobs_to_remove and not m_job_updated_status:
-            return
-        with self.update_lock:
-            for job_id in jobs_to_remove:
-                self.tracked_job_ids.remove(job_id)
-            self.m_job_last_status.update(m_job_updated_status)
+        logging.info('JobTracker daemon: updating tracked job list ...')
+        if jobs_to_remove or m_job_updated_status:
+            with self.update_lock:
+                for job_id in jobs_to_remove:
+                    self.tracked_job_ids.remove(job_id)
+                self.m_job_last_status.update(m_job_updated_status)
+
+        logging.info('JobTracker daemon: update completed')
+        self.update_in_progress = False
 
     def _save_job_status_json(self, job_id, status, last_event):
         try:
