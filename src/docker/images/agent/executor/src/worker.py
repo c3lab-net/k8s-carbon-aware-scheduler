@@ -118,8 +118,8 @@ class JobTracker:
     ]
 
     def __init__(self, update_frequency = timedelta(minutes=1)):
-        self.tracked_job_ids = set(self.get_unfinished_job_ids())
-        self.m_job_last_status = {}
+        self.tracked_job_ids: list[str] = set(self.get_unfinished_job_ids())
+        self.m_job_last_status: dict[str, str] = {}
         self.update_lock = threading.Lock()
         self.update_daemon = RepeatTimer(update_frequency.total_seconds(), self._update_all_job_status)
         self.update_in_progress = False
@@ -134,7 +134,7 @@ class JobTracker:
             self.tracked_job_ids.add(job_id)
             self.m_job_last_status[job_id] = status
 
-    def get_unfinished_job_ids(self):
+    def get_unfinished_job_ids(self) -> list[str]:
         try:
             results = psql_execute_list('''SELECT job_id
                     FROM jobhistorylastevent
@@ -174,8 +174,8 @@ class JobTracker:
             return
         self.update_in_progress = True
         logging.info('JobTracker daemon: updating all tracked jobs\' status ...')
-        tracked_job_ids = self.tracked_job_ids
-        m_job_last_status = self.m_job_last_status
+        tracked_job_ids = self.tracked_job_ids.copy()
+        m_job_last_status = self.m_job_last_status.copy()
         m_job_updated_status = {}
         jobs_to_remove = set()
         logging.info(f'# of jobs to check: {len(tracked_job_ids)}')
