@@ -32,7 +32,7 @@ class KubeHelper:
                                     quote('-o=jsonpath={.status}'), print_command=False)
             return json.loads(result)
         except Exception as ex:
-            if 'Error from server (NotFound)' in ex:
+            if 'Error from server (NotFound)' in str(ex):
                 return None
             raise ValueError(f'Failed to get job status json: {ex}') from ex
 
@@ -226,7 +226,7 @@ class JobTracker:
             if status is None:
                 event = 'NotFound'
                 timestamp = datetime.now(tz=timezone.utc)
-            if status.get('succeeded', 0) > 0 and 'completionTime' in status:
+            elif status.get('succeeded', 0) > 0 and 'completionTime' in status:
                 event = 'Completed'
                 timestamp = status['completionTime']
             elif status.get('failed', 0) > 0:
