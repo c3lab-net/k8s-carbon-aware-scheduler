@@ -32,6 +32,8 @@ class KubeHelper:
                                     quote('-o=jsonpath={.status}'), print_command=False)
             return json.loads(result)
         except Exception as ex:
+            if 'Error from server (NotFound)' in ex:
+                return None
             raise ValueError(f'Failed to get job status json: {ex}') from ex
 
     @staticmethod
@@ -111,11 +113,12 @@ class JobTracker:
 
     JOB_FINAL_STATES = [
         'Completed',
-        'Failed'
+        'Failed',
+        'NotFound',
     ]
 
     def __init__(self, update_frequency = timedelta(minutes=1)):
-        self.tracked_job_ids = set()
+        self.tracked_job_ids = set(self.get_unfinished_job_ids())
         self.m_job_last_status = {}
         self.update_lock = threading.Lock()
         self.update_daemon = RepeatTimer(update_frequency.total_seconds(), self._update_all_job_status)
@@ -130,6 +133,19 @@ class JobTracker:
         with self.update_lock:
             self.tracked_job_ids.add(job_id)
             self.m_job_last_status[job_id] = status
+
+    def get_unfinished_job_ids(self):
+        try:
+            results = psql_execute_list('''SELECT job_id
+                    FROM jobhistorylastevent
+                    WHERE event NOT IN %s;''',
+                tuple(JobTracker.JOB_FINAL_STATES),
+                fetch_result=True)
+            return [row[0] for row in results]  # one column per row
+        except Exception as ex:
+            logging.error(f'Failed to retrieve unfinished jobs, ignoring ...: {ex}')
+            logging.error(traceback.format_exc())
+            return []
 
     def save_job_history(self, job_id: str, event: str, timestamp: datetime):
         logging.info(f'Saving job history with job_id={job_id}, event={event}, timestamp={timestamp}')
@@ -189,6 +205,9 @@ class JobTracker:
 
     def _save_job_status_json(self, job_id, status, last_event):
         try:
+            if status is None:
+                event = 'NotFound'
+                timestamp = datetime.now(tz=timezone.utc)
             if status.get('succeeded', 0) > 0 and 'completionTime' in status:
                 event = 'Completed'
                 timestamp = status['completionTime']
