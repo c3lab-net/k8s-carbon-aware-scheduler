@@ -39,7 +39,7 @@ class KubeHelper:
         try:
             l_conditions = status_json['conditions']
             filtered = filter(event_predicate, l_conditions)
-            return next(iter(sorted(filtered, key=lambda e: e['lastTransitionTime'])), None)
+            return max([e['lastTransitionTime'] for e in filtered])
         except Exception as ex:
             raise ValueError(f'Failed to get last event time from json status: {ex}') from ex
 
@@ -192,7 +192,7 @@ class JobTracker:
             elif status.get('failed', 0) > 0:
                 event = 'Failed'
                 timestamp = KubeHelper.get_last_event_time_from_status_json(status,
-                                lambda e: e.get('status', None) is True and e.get('type', None) == 'Failed')
+                                lambda e: e.get('status', None) == 'True' and e.get('type', None) == 'Failed')
             elif 'startTime' in status:
                 event = 'Started'
                 timestamp = status['startTime']
