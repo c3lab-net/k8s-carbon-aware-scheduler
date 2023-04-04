@@ -123,6 +123,7 @@ class JobTracker:
         self.update_daemon.start()
 
     def track_job(self, job_id):
+        logging.info(f'Tracking job {job_id} ...')
         status = self._update_job_status(job_id)
         if status in JobTracker.JOB_FINAL_STATES:
             return
@@ -161,6 +162,7 @@ class JobTracker:
         m_job_last_status = self.m_job_last_status
         m_job_updated_status = {}
         jobs_to_remove = set()
+        logging.info(f'# of jobs to check: {len(tracked_job_ids)}')
         for job_id in tracked_job_ids:
             try:
                 last_status = m_job_last_status[job_id]
@@ -178,6 +180,7 @@ class JobTracker:
             with self.update_lock:
                 self.m_job_last_status.update(m_job_updated_status)
                 for job_id in jobs_to_remove:
+                    logging.info(f'Removing job {job_id} from tracked list ...')
                     self.tracked_job_ids.remove(job_id)
                     self.m_job_last_status.pop(job_id)
 
