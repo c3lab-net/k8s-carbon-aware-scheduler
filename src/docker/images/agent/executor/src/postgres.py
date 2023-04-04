@@ -26,9 +26,7 @@ def psql_execute_scalar(cursor: psycopg2.extensions.cursor, query: str, args: Se
         cursor.execute(query, args)
         result = cursor.fetchone()
     except psycopg2.Error as ex:
-        logging.error(f'psql_execute_scalar("{query}", {args}): {ex}')
-        logging.error(traceback.format_exc())
-        raise ValueError("Failed to execute SQL query.")
+        raise ValueError(f"Failed to execute SQL query: {ex}") from ex
     return result[0] if result is not None else None
 
 
@@ -39,7 +37,5 @@ def psql_execute_list(cursor: psycopg2.extensions.cursor, query: str,
         cursor.execute(query, args)
         return cursor.fetchall() if fetch_result else cursor.rowcount
     except psycopg2.Error as ex:
-        logging.error(f'psql_execute_scalar("{query}", {args}): {ex}')
-        logging.error(traceback.format_exc())
-        raise ValueError("Failed to execute SQL query.")
+        raise ValueError(f"Failed to execute SQL query: {ex}") from ex
 
