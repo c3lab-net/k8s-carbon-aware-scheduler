@@ -109,6 +109,11 @@ class JobLauncher:
 class JobTracker:
     """Track jobs that are pending and periodically update their status in database."""
 
+    JOB_FINAL_STATES = [
+        'Completed',
+        'Failed'
+    ]
+
     def __init__(self, update_frequency = timedelta(minutes=1)):
         self.tracked_job_ids = set()
         self.m_job_last_status = {}
@@ -119,7 +124,7 @@ class JobTracker:
 
     def track_job(self, job_id):
         status = self._update_job_status(job_id)
-        if status == 'Completed':
+        if status in JobTracker.JOB_FINAL_STATES:
             return
         with self.update_lock:
             self.tracked_job_ids.add(job_id)
@@ -160,7 +165,7 @@ class JobTracker:
             try:
                 last_status = m_job_last_status[job_id]
                 status = self._update_job_status(job_id, last_status)
-                if status == 'Completed':
+                if status in JobTracker.JOB_FINAL_STATES:
                     jobs_to_remove.add(job_id)
                 if status != last_status:
                     m_job_updated_status[job_id] = status
