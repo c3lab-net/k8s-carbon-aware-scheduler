@@ -145,7 +145,8 @@ class JobTracker:
 
     def get_unfinished_job_ids(self) -> list[str]:
         try:
-            results = psql_execute_list('''SELECT job_id
+            cursor = self.dbconn.cursor()
+            results = psql_execute_list(cursor, '''SELECT job_id
                     FROM jobhistorylastevent
                     WHERE event NOT IN %s;''',
                 tuple(JobTracker.JOB_FINAL_STATES),
