@@ -49,6 +49,12 @@ class KubeHelper:
 class JobLauncher:
     """Launch a job in kubernetes and record metadata."""
 
+    def __init__(self):
+        self.dbconn = get_db_connection(autocommit=True)
+
+    def __del__(self):
+        self.dbconn.close()
+
     def launch_job(self, request):
         job_id = request['job_id']
         job_config = self._create_job_config(request)
@@ -98,12 +104,11 @@ class JobLauncher:
     def _save_job_config(self, job_id, job_config):
         logging.info(f'Saving job config for {job_id}')
         try:
-            conn = get_db_connection()
-            with conn, conn.cursor() as cursor:
-                result = psql_execute_list(cursor, 'INSERT INTO JobConfig (job_id, job_config) VALUES (%s, %s)', [
-                    job_id, Json(job_config)
-                ])
-                logging.debug(result)
+            cursor = self.dbconn.cursor()
+            result = psql_execute_list(cursor, 'INSERT INTO JobConfig (job_id, job_config) VALUES (%s, %s)', [
+                job_id, Json(job_config)
+            ])
+            logging.debug(result)
         except Exception as ex:
             raise ValueError(f'Failed to save job config (job_id={job_id}).') from ex
 
@@ -118,12 +123,16 @@ class JobTracker:
     ]
 
     def __init__(self, update_frequency = timedelta(minutes=1)):
+        self.dbconn = get_db_connection(autocommit=True)
         self.tracked_job_ids: list[str] = set(self.get_unfinished_job_ids())
         self.m_job_last_status: dict[str, str] = {}
         self.update_lock = threading.Lock()
         self.update_daemon = RepeatTimer(update_frequency.total_seconds(), self._update_all_job_status)
         self.update_in_progress = False
         self.update_daemon.start()
+
+    def __del__(self):
+        self.dbconn.close()
 
     def track_job(self, job_id):
         logging.info(f'Tracking job {job_id} ...')
@@ -150,13 +159,12 @@ class JobTracker:
     def save_job_history(self, job_id: str, event: str, timestamp: datetime):
         logging.info(f'Saving job history with job_id={job_id}, event={event}, timestamp={timestamp}')
         try:
-            conn = get_db_connection()
-            with conn, conn.cursor() as cursor:
-                result = psql_execute_list(cursor,
-                                            '''INSERT INTO JobHistory (job_id, event, time) VALUES (%s, %s, %s)
-                                                    ON CONFLICT(job_id, event) DO NOTHING;''',
-                                            [job_id, event, timestamp])
-                logging.debug(result)
+            cursor = self.dbconn.cursor()
+            result = psql_execute_list(cursor,
+                                        '''INSERT INTO JobHistory (job_id, event, time) VALUES (%s, %s, %s)
+                                                ON CONFLICT(job_id, event) DO NOTHING;''',
+                                        [job_id, event, timestamp])
+            logging.debug(result)
         except Exception as ex:
             raise ValueError(f'Failed to save job history (job_id={job_id}).') from ex
 
