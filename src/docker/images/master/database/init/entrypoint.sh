@@ -14,3 +14,4 @@ psql -v ON_ERROR_STOP=1 -f ./schemas/tables/table.jobrequest.sql
 psql -v ON_ERROR_STOP=1 -f ./schemas/tables/table.jobhistory.sql
 
 find ./schemas/indices -iname "*.sql" -exec psql -v ON_ERROR_STOP=1 -f {} \;
+find ./schemas/views -iname "*.sql" -exec psql -v ON_ERROR_STOP=1 -f {} \;
