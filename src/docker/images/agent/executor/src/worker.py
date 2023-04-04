@@ -274,7 +274,7 @@ def main():
         request = get_job_request_from_queue()
         logging.info(f'Received message:\n%s', yaml.safe_dump(request, default_flow_style=False))
         if request is None or 'job_id' not in request:
-            logging.error('Missing job_id in request:\n%s', request)
+            logging.error('Empty request or missing job_id in request:\n%s', request)
             continue
         try:
             job_id = request['job_id']
