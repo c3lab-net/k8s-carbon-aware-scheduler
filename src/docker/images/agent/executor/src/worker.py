@@ -146,10 +146,13 @@ class JobTracker:
     def get_unfinished_job_ids(self) -> list[str]:
         try:
             cursor = self.dbconn.cursor()
+            # NOTE: IN-list must be a tuple of tuples for parameters due to psycopg2 conversion.
+            #   Use cursor.mogrify(query, args) to verify generated SQL query.
+            # Source: https://stackoverflow.com/questions/28117576/python-psycopg2-where-in-statement
             results = psql_execute_list(cursor, '''SELECT job_id
                     FROM jobhistorylastevent
                     WHERE event NOT IN %s;''',
-                tuple(JobTracker.JOB_FINAL_STATES),
+                (tuple(JobTracker.JOB_FINAL_STATES),),
                 fetch_result=True)
             return [row[0] for row in results]  # one column per row
         except Exception as ex:
