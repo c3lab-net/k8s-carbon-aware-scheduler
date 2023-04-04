@@ -176,9 +176,10 @@ class JobTracker:
         logging.info('JobTracker daemon: updating tracked job list ...')
         if jobs_to_remove or m_job_updated_status:
             with self.update_lock:
+                self.m_job_last_status.update(m_job_updated_status)
                 for job_id in jobs_to_remove:
                     self.tracked_job_ids.remove(job_id)
-                self.m_job_last_status.update(m_job_updated_status)
+                    self.m_job_last_status.pop(job_id)
 
         logging.info('JobTracker daemon: update completed')
         self.update_in_progress = False
