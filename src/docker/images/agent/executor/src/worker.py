@@ -126,15 +126,11 @@ class JobTracker:
         self.dbconn = get_db_connection(autocommit=True)
         self.tracked_job_ids: list[str] = set()
         self.m_job_last_status: dict[str, str] = {}
+        self._add_unfinished_jobs()
+
         self.update_lock = threading.Lock()
         self.update_daemon = RepeatTimer(update_frequency.total_seconds(), self._update_all_job_status)
         self.update_in_progress = False
-
-        logging.info('Adding unfinished jobs from database ...')
-        for job_id in self.get_unfinished_job_ids():
-            self.tracked_job_ids.add(job_id)
-            self.m_job_last_status[job_id] = None
-
         self.update_daemon.start()
 
     def __del__(self):
@@ -149,7 +145,15 @@ class JobTracker:
             self.tracked_job_ids.add(job_id)
             self.m_job_last_status[job_id] = status
 
-    def get_unfinished_job_ids(self) -> list[str]:
+    def _add_unfinished_jobs(self):
+        logging.info('Adding unfinished jobs from database ...')
+        unfinished_job_ids = self._get_unfinished_job_ids()
+        for job_id in unfinished_job_ids:
+            self.tracked_job_ids.add(job_id)
+            self.m_job_last_status[job_id] = None
+        logging.info(f'Added {len(unfinished_job_ids)} unfinished jobs.')
+
+    def _get_unfinished_job_ids(self) -> list[str]:
         try:
             cursor = self.dbconn.cursor()
             # NOTE: IN-list must be a tuple of tuples for parameters due to psycopg2 conversion.
