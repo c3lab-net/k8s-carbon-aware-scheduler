@@ -287,5 +287,5 @@ def main():
 
 if __name__ == '__main__':
     logging.basicConfig(format='%(asctime)s [%(levelname)s] %(message)s',
-                        level=logging.INFO, datefmt='%m/%d/%Y %I:%M:%S %p')
+                        level=logging.DEBUG, datefmt='%m/%d/%Y %I:%M:%S %p')
     main()

@@ -30,10 +30,10 @@ def run_command(args: str, stdin: str = None, print_command=False) -> str:
             print_command: whether to print the command ran.
     """
     args = shlex.split(args)
-    if print_command:
-        print(f"+ {shlex.join(args)}", file=sys.stderr)
-        if stdin:
-            print(stdin, file=sys.stderr)
+    print_fn = logging.info if print_command else logging.debug
+    print_fn(f"+ {shlex.join(args)}")
+    if stdin:
+        print_fn(stdin)
     process = subprocess.run(args, input=stdin, stdout=PIPE, stderr=STDOUT,
                                 check=False, text=True)
     try:
