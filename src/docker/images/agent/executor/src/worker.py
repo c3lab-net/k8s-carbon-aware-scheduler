@@ -12,6 +12,19 @@ import threading
 from util import *
 from postgres import *
 
+def save_job_history(conn, job_id: str, event: str, timestamp: datetime):
+    logging.info(f'Saving job history with job_id={job_id}, event={event}, timestamp={timestamp}')
+    try:
+        cursor = conn.cursor()
+        result = psql_execute_list(cursor,
+                                    '''INSERT INTO JobHistory (job_id, event, time) VALUES (%s, %s, %s)
+                                            ON CONFLICT(job_id, event) DO NOTHING;''',
+                                    [job_id, event, timestamp])
+        logging.debug(result)
+    except Exception as ex:
+        raise ValueError(f'Failed to save job history (job_id={job_id}).') from ex
+
+
 class KubeHelper:
     """Helper tools with kubernetes."""
 
@@ -29,9 +42,9 @@ class KubeHelper:
     def get_job_status_json(job_id):
         try:
             result = run_command(f'kubectl get job -o=jsonpath='
-                                    f'{{.items[?(@.metadata.labels.job-uuid=="{quote(job_id)}")].status}}"',
+                                    f'{{.items[?(@.metadata.labels.job-uuid=="{quote(job_id)}")].status}}',
                                     print_command=False)
-            return json.loads(result)
+            return json.loads(result) if result else None
         except Exception as ex:
             if 'Error from server (NotFound)' in str(ex):
                 return None
@@ -58,9 +71,10 @@ class JobLauncher:
 
     def launch_job(self, request):
         job_id = request['job_id']
+        save_job_history(self.dbconn, job_id, 'Dequeued', datetime.now(timezone.utc))
         job_config = self._create_job_config(request)
         self._save_job_config(job_id, job_config)
-        KubeHelper.create_job(job_config)
+        self._create_job(job_id, job_config)
 
     def _get_job_template(self):
         return load_yaml(os.path.join(
@@ -115,6 +129,14 @@ class JobLauncher:
         except Exception as ex:
             raise ValueError(f'Failed to save job config (job_id={job_id}).') from ex
 
+    def _create_job(self, job_id, job_config):
+        try:
+            KubeHelper.create_job(job_config)
+        except Exception as ex:
+            save_job_history(self.dbconn, job_id, 'CreateFailed', datetime.now(timezone.utc))
+            logging.error(f'Failed to create job {job_id}: {ex}')
+            logging.error(traceback.format_exc())
+        save_job_history(self.dbconn, job_id, 'Created', datetime.now(timezone.utc))
 
 class JobTracker:
     """Track jobs that are pending and periodically update their status in database."""
@@ -123,6 +145,7 @@ class JobTracker:
         'Completed',
         'Failed',
         'NotFound',
+        'CreateFailed',
     ]
 
     def __init__(self, update_frequency = timedelta(minutes=1)):
@@ -172,18 +195,6 @@ class JobTracker:
             logging.error(f'Failed to retrieve unfinished jobs, ignoring ...: {ex}')
             logging.error(traceback.format_exc())
             return []
-
-    def save_job_history(self, job_id: str, event: str, timestamp: datetime):
-        logging.info(f'Saving job history with job_id={job_id}, event={event}, timestamp={timestamp}')
-        try:
-            cursor = self.dbconn.cursor()
-            result = psql_execute_list(cursor,
-                                        '''INSERT INTO JobHistory (job_id, event, time) VALUES (%s, %s, %s)
-                                                ON CONFLICT(job_id, event) DO NOTHING;''',
-                                        [job_id, event, timestamp])
-            logging.debug(result)
-        except Exception as ex:
-            raise ValueError(f'Failed to save job history (job_id={job_id}).') from ex
 
     def _update_job_status(self, job_id, last_event = None):
         try:
@@ -249,7 +260,7 @@ class JobTracker:
                 timestamp = datetime.now(tz=timezone.utc)
             logging.info(f'Job status of {job_id}: {event} at {timestamp}')
             if event != last_event:
-                self.save_job_history(job_id, event, timestamp)
+                save_job_history(self.dbconn, job_id, event, timestamp)
             return event
         except Exception as ex:
             raise ValueError(f'Failed to save job status. job_id={job_id}, status={status}.') from ex
@@ -281,7 +292,6 @@ def main():
             continue
         try:
             job_id = request['job_id']
-            job_tracker.save_job_history(job_id, 'Dequeued', datetime.now(timezone.utc))
             job_launcher.launch_job(request)
             job_tracker.track_job(job_id)
         except Exception as ex:
