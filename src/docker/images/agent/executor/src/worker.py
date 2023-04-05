@@ -28,8 +28,9 @@ class KubeHelper:
     @staticmethod
     def get_job_status_json(job_id):
         try:
-            result = run_command(f'kubectl get job {quote(job_id)} ' +
-                                    quote('-o=jsonpath={.status}'), print_command=False)
+            result = run_command(f'kubectl get job -o=jsonpath='
+                                    f'{{.items[?(@.metadata.labels.job-uuid=="{quote(job_id)}")].status}}"',
+                                    print_command=False)
             return json.loads(result)
         except Exception as ex:
             if 'Error from server (NotFound)' in str(ex):
@@ -70,10 +71,12 @@ class JobLauncher:
         logging.info('Creating job config ...')
         try:
             job_id = request['job_id']
+            job_name = request['name']
             job_config = self._get_job_template()
-            job_config['metadata']['name'] = job_id
+            job_config['metadata']['name'] = job_name
+            job_config['metadata']['labels']['job-uuid'] = job_id
             container = job_config['spec']['template']['spec']['containers'][0]
-            container['name'] = f'{job_id}-container1'
+            container['name'] = f'{job_name}-container1'
             container['image'] = request['image']
             container['command'] = [ 'sh', '-c' ]
             container['args'] = [ '\n'.join(request['command']) ]

@@ -29,7 +29,9 @@ class JobSchduler(Resource):
     @use_args(marshmallow_dataclass.class_schema(JobRequest)())
     def post(self, job_request: JobRequest):
         current_app.logger.info(f'{__class__}.post({job_request})')
-        job_id = str(uuid.uuid4())
+        job_uuid = uuid.uuid4()
+        job_id = str(job_uuid)
+        job_request.spec.name += f'-{job_uuid.hex[:10]}'
         self._save_job_request(job_id, job_request)
         self._save_job_history(job_id, 'Created', datetime.now(timezone.utc))
         best_location = self._get_best_location(job_request)
@@ -53,7 +55,8 @@ class JobSchduler(Resource):
         self._save_job_history(job_id, 'Enqueued', datetime.now(timezone.utc))
         # TODO: wait for response, or return a request id
         return {
-            'job_id': job_id,
+            'job_uuid': job_id,
+            'job_name': job_request.spec.name,
         }, 201
 
     def _get_best_location(self, job_request: JobRequest):

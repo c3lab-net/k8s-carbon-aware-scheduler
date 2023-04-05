@@ -47,7 +47,7 @@ def validate_mountpoints(d: dict[str, str]) -> bool:
         return True
 
 def is_valid_name(name: str) -> bool:
-    regex = re.compile(r'^[\w_.-]+$')
+    regex = re.compile(r'^[a-z0-9]([-a-z0-9]*[a-z0-9])?$')
     return regex.match(name) is not None
 
 def is_valid_image_name(name: str) -> bool:

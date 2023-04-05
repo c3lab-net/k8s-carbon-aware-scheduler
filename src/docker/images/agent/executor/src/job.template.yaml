@@ -2,6 +2,8 @@ apiVersion: batch/v1
 kind: Job
 metadata:
   name: VAR_job_name
+  labels:
+    job-uuid: VAR_job_uuid
 spec:
   backoffLimit: 0
   template:
