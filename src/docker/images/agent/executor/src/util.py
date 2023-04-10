@@ -29,7 +29,7 @@ def run_command(args: str, stdin: str = None, print_command=False) -> str:
             stdin: an optional string to pass to stdin.
             print_command: whether to print the command ran.
     """
-    args = shlex.split(args)
+    args = shlex.split(args, posix=False)
     print_fn = logging.info if print_command else logging.debug
     print_fn(f"+ {shlex.join(args)}")
     if stdin:
