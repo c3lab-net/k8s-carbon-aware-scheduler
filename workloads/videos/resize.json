@@ -1,0 +1,13 @@
+{
+	"spec": {
+		"name": "ffmpeg-scale-1080p-to-720p",
+		"image": "gitlab-registry.nrp-nautilus.io/c3lab/workload-migration/ffmpeg_alpine:5.1.2",
+		"command": [ "ffmpeg -hide_banner -i /data/video-transcoding/input/youtube-wnhvanMdx4s.1080p.h264.mp4 -vf scale=-1:720 /data/video-transcoding/output/youtube-wnhvanMdx4s.720p.h264.mp4" ],
+		"max_delay": 0
+	},
+	"original_location": "us-east",
+	"inputs": {
+		"/data": "pvc://cas-us-west-dataset/"
+	}, "outputs": {
+	}
+}

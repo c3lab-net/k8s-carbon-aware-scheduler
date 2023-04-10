@@ -1,0 +1,13 @@
+{
+	"spec": {
+		"name": "ffmpeg-transcode-h264-to-h265",
+		"image": "gitlab-registry.nrp-nautilus.io/c3lab/workload-migration/ffmpeg_alpine:5.1.2",
+		"command": [ "ffmpeg -hide_banner -i /data/video-transcoding/input/youtube-wnhvanMdx4s.1080p.h264.mp4 -c:v libx265 -vtag hvc1 /data/video-transcoding/output/youtube-wnhvanMdx4s.1080p.h265.mp4" ],
+		"max_delay": 0
+	},
+	"original_location": "us-east",
+	"inputs": {
+		"/data": "pvc://cas-us-west-dataset/"
+	}, "outputs": {
+	}
+}
