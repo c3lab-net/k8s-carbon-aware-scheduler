@@ -27,3 +27,7 @@ spec:
       restartPolicy: Never
       imagePullSecrets:
         - name: regcred
+      volumes: []
+        # - name: VAR_vol_name
+        #   persistentVolumeClaim:
+        #     claimName: VAR_pvc_name

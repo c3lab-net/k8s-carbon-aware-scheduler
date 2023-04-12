@@ -98,7 +98,9 @@ class JobLauncher:
             container['resources']['requests']['memory'] = get_dict_value_or_default(request, 'resources.requests.memory', '256Mi')
             container['resources']['limits']['cpu'] = get_dict_value_or_default(request, 'resources.limits.cpu', '1')
             container['resources']['limits']['memory'] = get_dict_value_or_default(request, 'resources.requests.memory', '256Mi')
-            volume_mounts = []
+            container_volume_mounts = []
+            all_volumes = []
+            volume_id = 0
             for mount_path, storage in (request['inputs'] | request['outputs']).items():
                 storage_type = storage['storage_type']
                 paths = storage['paths']
@@ -109,11 +111,20 @@ class JobLauncher:
                         raise NotImplementedError('s3 storage is not yet supported')
                     case _:
                         raise NotImplementedError(f'Unhandled storage type {storage_type}')
-                volume_mounts.append({
-                    'name': pvc_name,
+                volume_name = f'vol-{volume_id}'
+                volume_id += 1
+                container_volume_mounts.append({
+                    'name': volume_name,
                     'mountPath': mount_path,
                 })
-            container['volumeMounts'] = volume_mounts
+                all_volumes.append({
+                    'name': volume_name,
+                    'persistentVolumeClaim': {
+                        'claimName': pvc_name
+                    }
+                })
+            container['volumeMounts'] = container_volume_mounts
+            job_config['spec']['template']['spec']['volumes'] = all_volumes
             job_config['spec']['template']['spec']['containers'][0] = container
             return job_config
         except Exception as ex:
