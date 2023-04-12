@@ -72,9 +72,14 @@ class JobLauncher:
     def launch_job(self, request):
         job_id = request['job_id']
         save_job_history(self.dbconn, job_id, 'Dequeued', datetime.now(timezone.utc))
-        job_config = self._create_job_config(request)
-        self._save_job_config(job_id, job_config)
-        self._create_job(job_id, job_config)
+        try:
+            job_config = self._create_job_config(request)
+            self._save_job_config(job_id, job_config)
+            self._create_job(job_id, job_config)
+        except Exception:
+            save_job_history(self.dbconn, job_id, 'CreateFailed', datetime.now(timezone.utc))
+            raise
+        save_job_history(self.dbconn, job_id, 'Created', datetime.now(timezone.utc))
 
     def _get_job_template(self):
         return load_yaml(os.path.join(
@@ -145,10 +150,7 @@ class JobLauncher:
         try:
             KubeHelper.create_job(job_config)
         except Exception as ex:
-            save_job_history(self.dbconn, job_id, 'CreateFailed', datetime.now(timezone.utc))
-            logging.error(f'Failed to create job {job_id}: {ex}')
-            logging.error(traceback.format_exc())
-        save_job_history(self.dbconn, job_id, 'Created', datetime.now(timezone.utc))
+            raise ValueError(f'Failed to create job {job_id}: {ex}') from ex
 
 class JobTracker:
     """Track jobs that are pending and periodically update their status in database."""
