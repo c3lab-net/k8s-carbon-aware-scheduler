@@ -99,8 +99,9 @@ class JobLauncher:
             container['resources']['limits']['cpu'] = get_dict_value_or_default(request, 'resources.limits.cpu', '1')
             container['resources']['limits']['memory'] = get_dict_value_or_default(request, 'resources.requests.memory', '256Mi')
             volume_mounts = []
-            for mount_path, storage in request['inputs'] | request['outputs']:
-                [storage_type, paths] = storage
+            for mount_path, storage in (request['inputs'] | request['outputs']).items():
+                storage_type = storage['storage_type']
+                paths = storage['paths']
                 match storage_type:
                     case 'pvc':
                         [pvc_name] = paths

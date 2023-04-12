@@ -111,7 +111,7 @@ class JobRequest:
 
     def get_parsed_mountpoints(self, input_or_output: dict[str, str]):
         parsed_mountpoints = {}
-        for mountpoint, url in input_or_output:
+        for mountpoint, url in input_or_output.items():
             storage_type, paths = parse_storage_url(url)
             parsed_mountpoints[mountpoint] = {
                 'storage_type': storage_type,
