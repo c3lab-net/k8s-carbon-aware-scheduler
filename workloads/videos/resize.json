@@ -2,12 +2,23 @@
 	"spec": {
 		"name": "ffmpeg-scale-1080p-to-720p",
 		"image": "gitlab-registry.nrp-nautilus.io/c3lab/workload-migration/ffmpeg_alpine:5.1.2",
-		"command": [ "ffmpeg -hide_banner -i /data/video-transcoding/input/youtube-wnhvanMdx4s.1080p.h264.mp4 -vf scale=-1:720 /data/video-transcoding/output/youtube-wnhvanMdx4s.720p.h264.mp4" ],
+		"command": [ "export outdir=/output/`date --utc +%Y%m%d_%H%M%SZ` && mkdir $outdir && time -v ffmpeg -hide_banner -stats_period 15 -i /input/videos/youtube-wnhvanMdx4s.1080p.mp4 -vf scale=-1:720 $outdir/youtube-wnhvanMdx4s.720p.mp4 2>&1 | tr '\r' '\n'" ],
 		"max_delay": 0
 	},
 	"original_location": "us-east",
 	"inputs": {
-		"/data": "pvc://cas-us-west-dataset/"
+		"/input": "pvc://cas-data-video-input/"
 	}, "outputs": {
+		"/output": "pvc://cas-data-video-output/"
+	},
+	"resources": {
+		"requests": {
+			"cpu": "4",
+			"memory": "1Gi"
+		},
+		"limits": {
+			"cpu": "4",
+			"memory": "1Gi"
+		}
 	}
 }
