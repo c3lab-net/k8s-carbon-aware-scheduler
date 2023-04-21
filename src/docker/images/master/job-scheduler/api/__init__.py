@@ -40,6 +40,7 @@ def create_app():
         app.logger.setLevel(gunicorn_logger.level)
 
     from api.routes.job_scheduler import JobSchduler
+    from api.routes.job_status import JobStatus
 
     # Alternatively, use this and `from varname import nameof`.
     errors_custom_responses = {
@@ -51,6 +52,7 @@ def create_app():
 
     api = CustomApi(app, errors=errors_custom_responses)
     api.add_resource(JobSchduler, '/job-scheduler/')
+    api.add_resource(JobStatus, '/job-status/')
 
     # Source: https://github.com/marshmallow-code/webargs/issues/181#issuecomment-621159812
     @webargs.flaskparser.parser.error_handler
