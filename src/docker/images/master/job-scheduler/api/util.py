@@ -5,6 +5,7 @@ import subprocess
 import dataclasses
 from datetime import datetime, date, timedelta, time
 from enum import Enum
+from uuid import UUID
 from typing import Any, Sequence, Union
 from flask import current_app
 from flask.json import JSONEncoder
@@ -31,6 +32,8 @@ class CustomJSONEncoder(JSONEncoder):
             return dataclasses.asdict(o)
         if isinstance(o, Enum):
             return o.value
+        if isinstance(o, UUID):
+            return str(o)
         raise TypeError(f"Type {type(o)} is not serializable")
 
 def get_all_enum_values(enum_type):
