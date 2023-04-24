@@ -29,25 +29,23 @@ We can then extracte name, latitude and longitude into a CSV file:
 Finally, we can join these two files:
 
     LANG=en_EN && \ # Needed for sort order to be consistent across join and sort
-    join -t $'\t' -o auto <(sort allnodes.kubectl.tsv) <(sort allnodes.gps.tsv) > \
+    join -t $'\t' -o auto <(sort allnodes.kubectl.tsv) <(sort allnodes.gps.tsv) | sort -k5 -k4 -u -n > \
     allnodes.region.gps.tsv
 
 We can then transform this into a yaml file and feed it to the API:
 
     preamble='---
     public_clouds:
-    - provider: NRP
+    - provider: Nautilus
       regions:'
     awk -F '\t' -v preamble="$preamble" '
     BEGIN {
         print preamble
     }
     {
-      printf "  - code: %s:%s\n", $2, $3
+      printf "  - code: %s.%s\n", $2, $3
       printf "    name: %s\n", $1
       printf "    gps:\n"
       printf "    - %f\n", $4
       printf "    - %f\n", $5
-    }' allnodes.region.gps.tsv > cloud_locations.nrp.yaml
-
-TODO: Need to de-duplicate this data as this is based on node name
+    }' allnodes.region.gps.tsv > cloud_locations.nautilus.yaml
