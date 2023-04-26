@@ -1,0 +1,25 @@
+{
+    "runtime": 900,
+    "schedule": {
+        "type": "onetime",
+        "start_time": "2023-04-26 16:55:00-07:00",
+        "max_delay": 0
+    },
+    "dataset": {
+        "input_size_gb": 0,
+        "output_size_gb": 0
+    },
+    "candidate_locations": [
+        {
+            "id": "Azure:eastus"
+        },
+        {
+            "id": "Azure:westus"
+        },
+        {
+            "id": "Azure:centralus"
+        }
+    ],
+    "use_prediction": true,
+    "carbon_data_source": "azure"
+}
