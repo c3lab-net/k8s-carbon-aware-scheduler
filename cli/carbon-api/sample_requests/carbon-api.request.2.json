@@ -9,16 +9,8 @@
         "input_size_gb": 0,
         "output_size_gb": 0
     },
-    "candidate_locations": [
-        {
-            "id": "Azure:eastus"
-        },
-        {
-            "id": "Azure:westus"
-        },
-        {
-            "id": "Azure:centralus"
-        }
+    "candidate_providers": [
+        "Nautilus"
     ],
     "use_prediction": true,
     "carbon_data_source": "azure"
