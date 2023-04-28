@@ -24,6 +24,17 @@ spec:
       - name: cas-master-carbon-api
         image: gitlab-registry.nrp-nautilus.io/c3lab/carbon-aware-scheduler/master.carbon-api:0.1
         imagePullPolicy: Always
+        env:
+          - name: LABEL_COMPONENT
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.labels['component']
+          - name: LABEL_APP
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.labels['app']
+          - name: APP_ROLE
+            value: "$(LABEL_COMPONENT).$(LABEL_APP)"
         volumeMounts:
           - mountPath: /etc/watttime
             name: secret-vol-watttime

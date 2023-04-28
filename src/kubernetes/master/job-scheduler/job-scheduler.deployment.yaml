@@ -48,6 +48,16 @@ spec:
             value: cas-carbon-api
           - name: POSTGRES_HOST
             value: cas-master-database
+          - name: LABEL_COMPONENT
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.labels['component']
+          - name: LABEL_APP
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.labels['app']
+          - name: APP_ROLE
+            value: "$(LABEL_COMPONENT).$(LABEL_APP)"
         ports:
           - containerPort: 8000
         resources:

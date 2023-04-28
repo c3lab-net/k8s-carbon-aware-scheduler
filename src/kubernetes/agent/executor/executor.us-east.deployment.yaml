@@ -41,6 +41,20 @@ spec:
             value: us-east
           - name: POSTGRES_HOST
             value: cas-master-database
+          - name: LABEL_COMPONENT
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.labels['component']
+          - name: LABEL_APP
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.labels['app']
+          - name: LABEL_REGION
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.labels['region']
+          - name: APP_ROLE
+            value: "$(LABEL_COMPONENT).$(LABEL_APP).$(LABEL_REGION)"
         volumeMounts:
           - name: secret-cas-serviceaccount-kube-config
             readOnly: true
