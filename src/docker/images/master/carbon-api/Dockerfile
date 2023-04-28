@@ -3,6 +3,7 @@ MAINTAINER Yibo Guo <nil.yibo@gmail.com>
 
 RUN pip3 install numpy arrow requests pyyaml
 RUN pip3 install psycopg2-binary marshmallow_dataclass
+RUN pip3 install Flask-Caching
 
 COPY energy-data/api /api
 WORKDIR /
