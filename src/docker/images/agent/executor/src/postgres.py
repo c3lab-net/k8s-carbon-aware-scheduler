@@ -23,6 +23,7 @@ def get_db_connection(host=None, database=None, autocommit=False):
 
 def psql_execute_scalar(cursor: psycopg2.extensions.cursor, query: str, args: Sequence[Any] = None) -> Any | None:
     """Execute the psql query and return the first column of first row."""
+    logging.debug('psql_execute_scalar(): %s', cursor.mogrify(query, args))
     try:
         cursor.execute(query, args)
         result = cursor.fetchone()
@@ -34,6 +35,7 @@ def psql_execute_scalar(cursor: psycopg2.extensions.cursor, query: str, args: Se
 def psql_execute_list(cursor: psycopg2.extensions.cursor, query: str,
                       args: Union[Sequence[Any], dict[str, str]] = None, fetch_result=False) -> list[tuple]:
     """Execute the psql query and return all rows as a list of tuples."""
+    logging.debug('psql_execute_list(): %s', cursor.mogrify(query, args))
     try:
         cursor.execute(query, args)
         return cursor.fetchall() if fetch_result else cursor.rowcount

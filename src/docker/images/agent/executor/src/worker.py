@@ -203,8 +203,8 @@ class JobTracker:
             # Source: https://stackoverflow.com/questions/28117576/python-psycopg2-where-in-statement
             results = psql_execute_list(cursor, '''SELECT job_id
                     FROM jobhistorylastevent
-                    WHERE event NOT IN %s;''',
-                (tuple(JobTracker.JOB_FINAL_STATES),),
+                    WHERE origin = %s AND event NOT IN %s;''',
+                (APP_ROLE, tuple(JobTracker.JOB_FINAL_STATES),),
                 fetch_result=True)
             return [row[0] for row in results]  # one column per row
         except Exception as ex:
