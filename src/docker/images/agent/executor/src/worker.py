@@ -12,14 +12,16 @@ import threading
 from util import *
 from postgres import *
 
+APP_ROLE = get_env_var('APP_ROLE')
+
 def save_job_history(conn, job_id: str, event: str, timestamp: datetime):
     logging.info(f'Saving job history with job_id={job_id}, event={event}, timestamp={timestamp}')
     try:
         cursor = conn.cursor()
         result = psql_execute_list(cursor,
-                                    '''INSERT INTO JobHistory (job_id, event, time) VALUES (%s, %s, %s)
+                                    '''INSERT INTO JobHistory (job_id, event, time, origin) VALUES (%s, %s, %s, %s)
                                             ON CONFLICT(job_id, event) DO NOTHING;''',
-                                    [job_id, event, timestamp])
+                                    [job_id, event, timestamp, APP_ROLE])
         logging.debug(result)
     except Exception as ex:
         raise ValueError(f'Failed to save job history (job_id={job_id}).') from ex

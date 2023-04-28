@@ -16,6 +16,7 @@ from api.config import REGIONS as AVAILABLE_LOCATIONS
 
 g_carbon_api_client = CarbonApiClient()
 g_job_queue = JobQueue()
+APP_ROLE = get_env_var('APP_ROLE')
 
 
 class JobSchduler(Resource):
@@ -87,8 +88,9 @@ class JobSchduler(Resource):
         current_app.logger.info(f'Saving job history with job_id={job_id}, event={event}, timestamp={timestamp}')
         try:
             cursor = self.dbconn.cursor()
-            result = psql_execute_list(cursor, 'INSERT INTO JobHistory (job_id, event, time) VALUES (%s, %s, %s)', [
-                job_id, event, timestamp
+            result = psql_execute_list(cursor, '''INSERT INTO JobHistory (job_id, event, time, origin)
+                                                    VALUES (%s, %s, %s, %s)''', [
+                job_id, event, timestamp, APP_ROLE
             ])
             current_app.logger.debug(result)
         except Exception as ex:
