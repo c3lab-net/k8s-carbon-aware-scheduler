@@ -1,0 +1,31 @@
+{
+    "runtime": 900,
+    "schedule": {
+        "type": "onetime",
+        "start_time": null,
+        "max_delay": 0
+    },
+    "dataset": {
+        "input_size_gb": 0,
+        "output_size_gb": 0
+    },
+    "candidate_locations": [
+        {
+            "id": "Nautilus:us-west",
+            "latitude": 37.338208,
+            "longitude": -121.886329
+        },
+        {
+            "id": "Nautilus:us-central",
+            "latitude": 44.311357,
+            "longitude": -96.798388
+        },
+        {
+            "id": "Nautilus:us-east",
+            "latitude": 40.735657,
+            "longitude": -74.172367
+        }
+    ],
+    "use_prediction": true,
+    "carbon_data_source": "azure"
+}

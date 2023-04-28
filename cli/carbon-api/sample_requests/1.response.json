@@ -1,0 +1,95 @@
+{
+  "request": {
+    "runtime": 900,
+    "schedule": {
+      "type": "onetime",
+      "start_time": "2023-04-28T19:25:00+00:00",
+      "interval": null,
+      "max_delay": 0
+    },
+    "dataset": {
+      "input_size_gb": 0,
+      "output_size_gb": 0
+    },
+    "original_location": null,
+    "candidate_providers": [],
+    "candidate_locations": [
+      {
+        "id": "Azure:eastus",
+        "latitude": null,
+        "longitude": null
+      },
+      {
+        "id": "Azure:westus",
+        "latitude": null,
+        "longitude": null
+      },
+      {
+        "id": "Azure:centralus",
+        "latitude": null,
+        "longitude": null
+      }
+    ],
+    "carbon_data_source": "azure",
+    "use_prediction": true
+  },
+  "original-region": "None",
+  "selected-region": "Azure:westus",
+  "isos": {
+    "Azure:eastus": "PJM_ROANOKE",
+    "Azure:westus": "CAISO_NORTH",
+    "Azure:centralus": "MISO_MASON_CITY"
+  },
+  "weighted-scores": {
+    "Azure:eastus": 0.662969006214352,
+    "Azure:westus": 0.4286094029123148,
+    "Azure:centralus": 0.6487020917830555
+  },
+  "raw-scores": {
+    "Azure:eastus": {
+      "energy-usage": 0.00125,
+      "carbon-emission-from-compute": 0.0007389070186430557,
+      "carbon-emission-from-migration": 0,
+      "carbon-emission": 0.0007389070186430557,
+      "wan-network-usage": 0
+    },
+    "Azure:westus": {
+      "energy-usage": 0.00125,
+      "carbon-emission-from-compute": 3.5828208736944447e-05,
+      "carbon-emission-from-migration": 0,
+      "carbon-emission": 3.5828208736944447e-05,
+      "wan-network-usage": 0
+    },
+    "Azure:centralus": {
+      "energy-usage": 0.00125,
+      "carbon-emission-from-compute": 0.0006961062753491666,
+      "carbon-emission-from-migration": 0,
+      "carbon-emission": 0.0006961062753491666,
+      "wan-network-usage": 0
+    }
+  },
+  "warnings": {},
+  "details": {
+    "Azure:eastus": {
+      "start_delay": [
+        0
+      ],
+      "migration_emission": [],
+      "migration_duration": []
+    },
+    "Azure:westus": {
+      "start_delay": [
+        0
+      ],
+      "migration_emission": [],
+      "migration_duration": []
+    },
+    "Azure:centralus": {
+      "start_delay": [
+        0
+      ],
+      "migration_emission": [],
+      "migration_duration": []
+    }
+  }
+}

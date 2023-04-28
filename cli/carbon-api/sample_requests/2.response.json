@@ -1,0 +1,802 @@
+{
+  "request": {
+    "runtime": 900,
+    "schedule": {
+      "type": "onetime",
+      "start_time": "2023-04-28T19:30:00+00:00",
+      "interval": null,
+      "max_delay": 0
+    },
+    "dataset": {
+      "input_size_gb": 0,
+      "output_size_gb": 0
+    },
+    "original_location": null,
+    "candidate_providers": [
+      "Nautilus",
+      "AWS",
+      "Azure"
+    ],
+    "candidate_locations": [],
+    "carbon_data_source": "azure",
+    "use_prediction": true
+  },
+  "original-region": "None",
+  "selected-region": "Nautilus:us-west.stanford",
+  "isos": {
+    "Nautilus:us-west.stanford": "CAISO_NORTH",
+    "Nautilus:us-west.ucsc": "CAISO_NORTH",
+    "Nautilus:us-west.ucsc-wa": "CAISO_NORTH",
+    "Nautilus:us-west.ucsd-t2": "CAISO_NORTH",
+    "Nautilus:us-west.ucmerced": "TID",
+    "Nautilus:us-west.cenic-la": "CAISO_NORTH",
+    "Nautilus:us-west.ucsb": "CAISO_SANBERNARDINO",
+    "Nautilus:us-west.usc": "LDWP",
+    "Nautilus:us-west.uci": "CAISO_LONGBEACH",
+    "Nautilus:us-west.ucr": "CAISO_SANBERNARDINO",
+    "Nautilus:us-west.ucsd-sdsc": "CAISO_SANDIEGO",
+    "Nautilus:us-west.csusb": "CAISO_SANBERNARDINO",
+    "Nautilus:us-west.ucsd": "CAISO_SANDIEGO",
+    "Nautilus:us-west.sdsu": "CAISO_SANDIEGO",
+    "Nautilus:us-mountain.unm": "PNM",
+    "Nautilus:us-mountain.cheyenne": "PSCO",
+    "Nautilus:us-central.sdsmt": "SPP_SIOUX",
+    "Nautilus:us-central.onenet": "SPP_MEMPHIS",
+    "Nautilus:us-central.usd": "MISO_WORTHINGTON",
+    "Nautilus:us-west.caltech": "ERCOT_NORTHCENTRAL",
+    "Nautilus:us-central.sdstate": "MISO_WORTHINGTON",
+    "Nautilus:us-west.seattle": "ERCOT_NORTHCENTRAL",
+    "Nautilus:us-central.unl": "SPP_WESTNE",
+    "Nautilus:us-central.ksu": "SPP_KANSAS",
+    "Nautilus:us-central.ou": "SPP_MEMPHIS",
+    "Nautilus:us-east.starlight": "PJM_CHICAGO",
+    "Nautilus:us-east.uic": "PJM_CHICAGO",
+    "Nautilus:us-east.atlanta": "SOCO",
+    "Nautilus:us-east.famu": "TAL",
+    "Nautilus:us-east.umich": "MISO_DETROIT",
+    "Nautilus:us-east.clemson": "DUK",
+    "Nautilus:us-east.cwru": "PJM_EASTERN_OH",
+    "Nautilus:us-central.mizzou": "SCEG",
+    "Nautilus:us-east.miami": "FPL",
+    "Nautilus:ca-east.ottawa": "IESO_NORTH",
+    "Nautilus:us-central.uark": "CPLE",
+    "Nautilus:us-east.nysernet": "NYISO_CENTRAL",
+    "Nautilus:us-east.udel": "PJM_NJ",
+    "Nautilus:us-mountain.i2-boise": "NYISO_NYC",
+    "Nautilus:us-east.i2-new-york": "NYISO_LONG",
+    "Nautilus:us-east.mghpcc": "ISONE_WCMA",
+    "Nautilus:eu.uk": "UK",
+    "Nautilus:eu.amsterdam": "NL",
+    "AWS:us-west-1": "CAISO_NORTH",
+    "AWS:us-west-2": "PACW",
+    "AWS:us-east-1": "PJM_SOUTHWEST_OH",
+    "AWS:us-east-2": "PJM_DC",
+    "Azure:australiaeast": "NEM_NSW",
+    "Azure:australiasoutheast": "NEM_VIC",
+    "Azure:canadacentral": "IESO_NORTH",
+    "Azure:canadaeast": "HQ",
+    "Azure:centralus": "MISO_MASON_CITY",
+    "Azure:eastus": "PJM_ROANOKE",
+    "Azure:francecentral": "FR",
+    "Azure:germanywestcentral": "DE",
+    "Azure:northeurope": "IE",
+    "Azure:norwayeast": "NO",
+    "Azure:southcentralus": "ERCOT_SANANTONIO",
+    "Azure:swedencentral": "SE",
+    "Azure:uksouth": "UK",
+    "Azure:westcentralus": "PACE",
+    "Azure:westeurope": "NL",
+    "Azure:westus": "CAISO_NORTH",
+    "Azure:westus2": "GCPD",
+    "Azure:westus3": "AZPS",
+    "Nautilus:pacific.hawaii": null,
+    "Nautilus:pacific.korea": null,
+    "Nautilus:pacific.guam": null
+  },
+  "weighted-scores": {
+    "Nautilus:us-west.stanford": 0.42860888429763894,
+    "Nautilus:us-west.ucsc": 0.42860888429763894,
+    "Nautilus:us-west.ucsc-wa": 0.42860888429763894,
+    "Nautilus:us-west.ucsd-t2": 0.42860888429763894,
+    "Nautilus:us-west.cenic-la": 0.42860888429763894,
+    "Nautilus:us-west.ucsb": 0.42860888429763894,
+    "Nautilus:us-west.uci": 0.42860888429763894,
+    "Nautilus:us-west.ucr": 0.42860888429763894,
+    "Nautilus:us-west.ucsd-sdsc": 0.42860888429763894,
+    "Nautilus:us-west.csusb": 0.42860888429763894,
+    "Nautilus:us-west.ucsd": 0.42860888429763894,
+    "Nautilus:us-west.sdsu": 0.42860888429763894,
+    "Nautilus:us-central.usd": 0.6488492226089352,
+    "Nautilus:us-west.caltech": 0.6286764805191667,
+    "Nautilus:us-central.sdstate": 0.6488492226089352,
+    "Nautilus:us-west.seattle": 0.6286764805191667,
+    "Nautilus:us-east.starlight": 0.6627393661563427,
+    "Nautilus:us-east.uic": 0.6627393661563427,
+    "Nautilus:us-east.umich": 0.6488492226089352,
+    "Nautilus:us-east.cwru": 0.6627393661563427,
+    "Nautilus:ca-east.ottawa": 0.6079321953091666,
+    "Nautilus:us-east.udel": 0.6627393661563427,
+    "Nautilus:eu.uk": 0.5961852038825463,
+    "Nautilus:eu.amsterdam": 0.6293303329238888,
+    "AWS:us-west-1": 0.42860888429763894,
+    "AWS:us-east-1": 0.6627393661563427,
+    "AWS:us-east-2": 0.6627393661563427,
+    "Azure:australiaeast": 0.7550701731422684,
+    "Azure:australiasoutheast": 0.7181547167145371,
+    "Azure:canadacentral": 0.6079321953091666,
+    "Azure:canadaeast": 0.6009886808212963,
+    "Azure:centralus": 0.6488492226089352,
+    "Azure:eastus": 0.6627393661563427,
+    "Azure:francecentral": 0.5901165264244445,
+    "Azure:germanywestcentral": 0.738685826799537,
+    "Azure:northeurope": 0.6445896037093982,
+    "Azure:norwayeast": 0.5143318543194907,
+    "Azure:southcentralus": 0.6286764805191667,
+    "Azure:swedencentral": 0.7235124412880557,
+    "Azure:uksouth": 0.5961852038825463,
+    "Azure:westcentralus": 0.7143516786356945,
+    "Azure:westeurope": 0.6293303329238888,
+    "Azure:westus": 0.42860888429763894,
+    "Azure:westus2": 0.6414578519460185,
+    "Azure:westus3": 0.6515767491162037
+  },
+  "raw-scores": {
+    "Nautilus:us-west.stanford": {
+      "energy-usage": 0.00125,
+      "carbon-emission-from-compute": 3.582665289291667e-05,
+      "carbon-emission-from-migration": 0,
+      "carbon-emission": 3.582665289291667e-05,
+      "wan-network-usage": 0
+    },
+    "Nautilus:us-west.ucsc": {
+      "energy-usage": 0.00125,
+      "carbon-emission-from-compute": 3.582665289291667e-05,
+      "carbon-emission-from-migration": 0,
+      "carbon-emission": 3.582665289291667e-05,
+      "wan-network-usage": 0
+    },
+    "Nautilus:us-west.ucsc-wa": {
+      "energy-usage": 0.00125,
+      "carbon-emission-from-compute": 3.582665289291667e-05,
+      "carbon-emission-from-migration": 0,
+      "carbon-emission": 3.582665289291667e-05,
+      "wan-network-usage": 0
+    },
+    "Nautilus:us-west.ucsd-t2": {
+      "energy-usage": 0.00125,
+      "carbon-emission-from-compute": 3.582665289291667e-05,
+      "carbon-emission-from-migration": 0,
+      "carbon-emission": 3.582665289291667e-05,
+      "wan-network-usage": 0
+    },
+    "Nautilus:us-west.cenic-la": {
+      "energy-usage": 0.00125,
+      "carbon-emission-from-compute": 3.582665289291667e-05,
+      "carbon-emission-from-migration": 0,
+      "carbon-emission": 3.582665289291667e-05,
+      "wan-network-usage": 0
+    },
+    "Nautilus:us-west.ucsb": {
+      "energy-usage": 0.00125,
+      "carbon-emission-from-compute": 3.582665289291667e-05,
+      "carbon-emission-from-migration": 0,
+      "carbon-emission": 3.582665289291667e-05,
+      "wan-network-usage": 0
+    },
+    "Nautilus:us-west.uci": {
+      "energy-usage": 0.00125,
+      "carbon-emission-from-compute": 3.582665289291667e-05,
+      "carbon-emission-from-migration": 0,
+      "carbon-emission": 3.582665289291667e-05,
+      "wan-network-usage": 0
+    },
+    "Nautilus:us-west.ucr": {
+      "energy-usage": 0.00125,
+      "carbon-emission-from-compute": 3.582665289291667e-05,
+      "carbon-emission-from-migration": 0,
+      "carbon-emission": 3.582665289291667e-05,
+      "wan-network-usage": 0
+    },
+    "Nautilus:us-west.ucsd-sdsc": {
+      "energy-usage": 0.00125,
+      "carbon-emission-from-compute": 3.582665289291667e-05,
+      "carbon-emission-from-migration": 0,
+      "carbon-emission": 3.582665289291667e-05,
+      "wan-network-usage": 0
+    },
+    "Nautilus:us-west.csusb": {
+      "energy-usage": 0.00125,
+      "carbon-emission-from-compute": 3.582665289291667e-05,
+      "carbon-emission-from-migration": 0,
+      "carbon-emission": 3.582665289291667e-05,
+      "wan-network-usage": 0
+    },
+    "Nautilus:us-west.ucsd": {
+      "energy-usage": 0.00125,
+      "carbon-emission-from-compute": 3.582665289291667e-05,
+      "carbon-emission-from-migration": 0,
+      "carbon-emission": 3.582665289291667e-05,
+      "wan-network-usage": 0
+    },
+    "Nautilus:us-west.sdsu": {
+      "energy-usage": 0.00125,
+      "carbon-emission-from-compute": 3.582665289291667e-05,
+      "carbon-emission-from-migration": 0,
+      "carbon-emission": 3.582665289291667e-05,
+      "wan-network-usage": 0
+    },
+    "Nautilus:us-central.usd": {
+      "energy-usage": 0.00125,
+      "carbon-emission-from-compute": 0.0006965476678268055,
+      "carbon-emission-from-migration": 0,
+      "carbon-emission": 0.0006965476678268055,
+      "wan-network-usage": 0
+    },
+    "Nautilus:us-west.caltech": {
+      "energy-usage": 0.00125,
+      "carbon-emission-from-compute": 0.0006360294415575001,
+      "carbon-emission-from-migration": 0,
+      "carbon-emission": 0.0006360294415575001,
+      "wan-network-usage": 0
+    },
+    "Nautilus:us-central.sdstate": {
+      "energy-usage": 0.00125,
+      "carbon-emission-from-compute": 0.0006965476678268055,
+      "carbon-emission-from-migration": 0,
+      "carbon-emission": 0.0006965476678268055,
+      "wan-network-usage": 0
+    },
+    "Nautilus:us-west.seattle": {
+      "energy-usage": 0.00125,
+      "carbon-emission-from-compute": 0.0006360294415575001,
+      "carbon-emission-from-migration": 0,
+      "carbon-emission": 0.0006360294415575001,
+      "wan-network-usage": 0
+    },
+    "Nautilus:us-east.starlight": {
+      "energy-usage": 0.00125,
+      "carbon-emission-from-compute": 0.0007382180984690278,
+      "carbon-emission-from-migration": 0,
+      "carbon-emission": 0.0007382180984690278,
+      "wan-network-usage": 0
+    },
+    "Nautilus:us-east.uic": {
+      "energy-usage": 0.00125,
+      "carbon-emission-from-compute": 0.0007382180984690278,
+      "carbon-emission-from-migration": 0,
+      "carbon-emission": 0.0007382180984690278,
+      "wan-network-usage": 0
+    },
+    "Nautilus:us-east.umich": {
+      "energy-usage": 0.00125,
+      "carbon-emission-from-compute": 0.0006965476678268055,
+      "carbon-emission-from-migration": 0,
+      "carbon-emission": 0.0006965476678268055,
+      "wan-network-usage": 0
+    },
+    "Nautilus:us-east.cwru": {
+      "energy-usage": 0.00125,
+      "carbon-emission-from-compute": 0.0007382180984690278,
+      "carbon-emission-from-migration": 0,
+      "carbon-emission": 0.0007382180984690278,
+      "wan-network-usage": 0
+    },
+    "Nautilus:ca-east.ottawa": {
+      "energy-usage": 0.00125,
+      "carbon-emission-from-compute": 0.0005737965859275,
+      "carbon-emission-from-migration": 0,
+      "carbon-emission": 0.0005737965859275,
+      "wan-network-usage": 0
+    },
+    "Nautilus:us-east.udel": {
+      "energy-usage": 0.00125,
+      "carbon-emission-from-compute": 0.0007382180984690278,
+      "carbon-emission-from-migration": 0,
+      "carbon-emission": 0.0007382180984690278,
+      "wan-network-usage": 0
+    },
+    "Nautilus:eu.uk": {
+      "energy-usage": 0.00125,
+      "carbon-emission-from-compute": 0.0005385556116476388,
+      "carbon-emission-from-migration": 0,
+      "carbon-emission": 0.0005385556116476388,
+      "wan-network-usage": 0
+    },
+    "Nautilus:eu.amsterdam": {
+      "energy-usage": 0.00125,
+      "carbon-emission-from-compute": 0.0006379909987716667,
+      "carbon-emission-from-migration": 0,
+      "carbon-emission": 0.0006379909987716667,
+      "wan-network-usage": 0
+    },
+    "AWS:us-west-1": {
+      "energy-usage": 0.00125,
+      "carbon-emission-from-compute": 3.582665289291667e-05,
+      "carbon-emission-from-migration": 0,
+      "carbon-emission": 3.582665289291667e-05,
+      "wan-network-usage": 0
+    },
+    "AWS:us-east-1": {
+      "energy-usage": 0.00125,
+      "carbon-emission-from-compute": 0.0007382180984690278,
+      "carbon-emission-from-migration": 0,
+      "carbon-emission": 0.0007382180984690278,
+      "wan-network-usage": 0
+    },
+    "AWS:us-east-2": {
+      "energy-usage": 0.00125,
+      "carbon-emission-from-compute": 0.0007382180984690278,
+      "carbon-emission-from-migration": 0,
+      "carbon-emission": 0.0007382180984690278,
+      "wan-network-usage": 0
+    },
+    "Azure:australiaeast": {
+      "energy-usage": 0.00125,
+      "carbon-emission-from-compute": 0.0010152105194268055,
+      "carbon-emission-from-migration": 0,
+      "carbon-emission": 0.0010152105194268055,
+      "wan-network-usage": 0
+    },
+    "Azure:australiasoutheast": {
+      "energy-usage": 0.00125,
+      "carbon-emission-from-compute": 0.0009044641501436111,
+      "carbon-emission-from-migration": 0,
+      "carbon-emission": 0.0009044641501436111,
+      "wan-network-usage": 0
+    },
+    "Azure:canadacentral": {
+      "energy-usage": 0.00125,
+      "carbon-emission-from-compute": 0.0005737965859275,
+      "carbon-emission-from-migration": 0,
+      "carbon-emission": 0.0005737965859275,
+      "wan-network-usage": 0
+    },
+    "Azure:canadaeast": {
+      "energy-usage": 0.00125,
+      "carbon-emission-from-compute": 0.000552966042463889,
+      "carbon-emission-from-migration": 0,
+      "carbon-emission": 0.000552966042463889,
+      "wan-network-usage": 0
+    },
+    "Azure:centralus": {
+      "energy-usage": 0.00125,
+      "carbon-emission-from-compute": 0.0006965476678268055,
+      "carbon-emission-from-migration": 0,
+      "carbon-emission": 0.0006965476678268055,
+      "wan-network-usage": 0
+    },
+    "Azure:eastus": {
+      "energy-usage": 0.00125,
+      "carbon-emission-from-compute": 0.0007382180984690278,
+      "carbon-emission-from-migration": 0,
+      "carbon-emission": 0.0007382180984690278,
+      "wan-network-usage": 0
+    },
+    "Azure:francecentral": {
+      "energy-usage": 0.00125,
+      "carbon-emission-from-compute": 0.0005203495792733333,
+      "carbon-emission-from-migration": 0,
+      "carbon-emission": 0.0005203495792733333,
+      "wan-network-usage": 0
+    },
+    "Azure:germanywestcentral": {
+      "energy-usage": 0.00125,
+      "carbon-emission-from-compute": 0.0009660574803986111,
+      "carbon-emission-from-migration": 0,
+      "carbon-emission": 0.0009660574803986111,
+      "wan-network-usage": 0
+    },
+    "Azure:northeurope": {
+      "energy-usage": 0.00125,
+      "carbon-emission-from-compute": 0.0006837688111281945,
+      "carbon-emission-from-migration": 0,
+      "carbon-emission": 0.0006837688111281945,
+      "wan-network-usage": 0
+    },
+    "Azure:norwayeast": {
+      "energy-usage": 0.00125,
+      "carbon-emission-from-compute": 0.0002929955629584722,
+      "carbon-emission-from-migration": 0,
+      "carbon-emission": 0.0002929955629584722,
+      "wan-network-usage": 0
+    },
+    "Azure:southcentralus": {
+      "energy-usage": 0.00125,
+      "carbon-emission-from-compute": 0.0006360294415575001,
+      "carbon-emission-from-migration": 0,
+      "carbon-emission": 0.0006360294415575001,
+      "wan-network-usage": 0
+    },
+    "Azure:swedencentral": {
+      "energy-usage": 0.00125,
+      "carbon-emission-from-compute": 0.0009205373238641667,
+      "carbon-emission-from-migration": 0,
+      "carbon-emission": 0.0009205373238641667,
+      "wan-network-usage": 0
+    },
+    "Azure:uksouth": {
+      "energy-usage": 0.00125,
+      "carbon-emission-from-compute": 0.0005385556116476388,
+      "carbon-emission-from-migration": 0,
+      "carbon-emission": 0.0005385556116476388,
+      "wan-network-usage": 0
+    },
+    "Azure:westcentralus": {
+      "energy-usage": 0.00125,
+      "carbon-emission-from-compute": 0.0008930550359070834,
+      "carbon-emission-from-migration": 0,
+      "carbon-emission": 0.0008930550359070834,
+      "wan-network-usage": 0
+    },
+    "Azure:westeurope": {
+      "energy-usage": 0.00125,
+      "carbon-emission-from-compute": 0.0006379909987716667,
+      "carbon-emission-from-migration": 0,
+      "carbon-emission": 0.0006379909987716667,
+      "wan-network-usage": 0
+    },
+    "Azure:westus": {
+      "energy-usage": 0.00125,
+      "carbon-emission-from-compute": 3.582665289291667e-05,
+      "carbon-emission-from-migration": 0,
+      "carbon-emission": 3.582665289291667e-05,
+      "wan-network-usage": 0
+    },
+    "Azure:westus2": {
+      "energy-usage": 0.00125,
+      "carbon-emission-from-compute": 0.0006743735558380555,
+      "carbon-emission-from-migration": 0,
+      "carbon-emission": 0.0006743735558380555,
+      "wan-network-usage": 0
+    },
+    "Azure:westus3": {
+      "energy-usage": 0.00125,
+      "carbon-emission-from-compute": 0.0007047302473486111,
+      "carbon-emission-from-migration": 0,
+      "carbon-emission": 0.0007047302473486111,
+      "wan-network-usage": 0
+    }
+  },
+  "warnings": {
+    "Nautilus:pacific.hawaii": "No carbon data found for iso None in time range (2023-04-28 19:30:00+00:00, 2023-04-28 19:45:00+00:00)",
+    "Nautilus:pacific.korea": "No carbon data found for iso None in time range (2023-04-28 19:30:00+00:00, 2023-04-28 19:45:00+00:00)",
+    "Nautilus:pacific.guam": "No carbon data found for iso None in time range (2023-04-28 19:30:00+00:00, 2023-04-28 19:45:00+00:00)",
+    "Nautilus:us-west.ucmerced": "Unknown azure region for iso TID",
+    "Nautilus:us-west.usc": "Unknown azure region for iso LDWP",
+    "Nautilus:us-mountain.unm": "Unknown azure region for iso PNM",
+    "Nautilus:us-mountain.cheyenne": "Unknown azure region for iso PSCO",
+    "Nautilus:us-central.sdsmt": "Unknown azure region for iso SPP_SIOUX",
+    "Nautilus:us-central.onenet": "Unknown azure region for iso SPP_MEMPHIS",
+    "Nautilus:us-central.unl": "Unknown azure region for iso SPP_WESTNE",
+    "Nautilus:us-central.ksu": "Unknown azure region for iso SPP_KANSAS",
+    "Nautilus:us-central.ou": "Unknown azure region for iso SPP_MEMPHIS",
+    "Nautilus:us-east.atlanta": "Unknown azure region for iso SOCO",
+    "Nautilus:us-east.famu": "Unknown azure region for iso TAL",
+    "Nautilus:us-east.clemson": "Unknown azure region for iso DUK",
+    "Nautilus:us-central.mizzou": "Unknown azure region for iso SCEG",
+    "Nautilus:us-east.miami": "Unknown azure region for iso FPL",
+    "Nautilus:us-central.uark": "Unknown azure region for iso CPLE",
+    "Nautilus:us-east.nysernet": "Unknown azure region for iso NYISO_CENTRAL",
+    "Nautilus:us-mountain.i2-boise": "Unknown azure region for iso NYISO_NYC",
+    "Nautilus:us-east.i2-new-york": "Unknown azure region for iso NYISO_LONG",
+    "Nautilus:us-east.mghpcc": "Unknown azure region for iso ISONE_WCMA",
+    "AWS:us-west-2": "Unknown azure region for iso PACW"
+  },
+  "details": {
+    "Nautilus:us-west.stanford": {
+      "start_delay": [
+        0
+      ],
+      "migration_emission": [],
+      "migration_duration": []
+    },
+    "Nautilus:us-west.ucsc": {
+      "start_delay": [
+        0
+      ],
+      "migration_emission": [],
+      "migration_duration": []
+    },
+    "Nautilus:us-west.ucsc-wa": {
+      "start_delay": [
+        0
+      ],
+      "migration_emission": [],
+      "migration_duration": []
+    },
+    "Nautilus:us-west.ucsd-t2": {
+      "start_delay": [
+        0
+      ],
+      "migration_emission": [],
+      "migration_duration": []
+    },
+    "Nautilus:us-west.cenic-la": {
+      "start_delay": [
+        0
+      ],
+      "migration_emission": [],
+      "migration_duration": []
+    },
+    "Nautilus:us-west.ucsb": {
+      "start_delay": [
+        0
+      ],
+      "migration_emission": [],
+      "migration_duration": []
+    },
+    "Nautilus:us-west.uci": {
+      "start_delay": [
+        0
+      ],
+      "migration_emission": [],
+      "migration_duration": []
+    },
+    "Nautilus:us-west.ucr": {
+      "start_delay": [
+        0
+      ],
+      "migration_emission": [],
+      "migration_duration": []
+    },
+    "Nautilus:us-west.ucsd-sdsc": {
+      "start_delay": [
+        0
+      ],
+      "migration_emission": [],
+      "migration_duration": []
+    },
+    "Nautilus:us-west.csusb": {
+      "start_delay": [
+        0
+      ],
+      "migration_emission": [],
+      "migration_duration": []
+    },
+    "Nautilus:us-west.ucsd": {
+      "start_delay": [
+        0
+      ],
+      "migration_emission": [],
+      "migration_duration": []
+    },
+    "Nautilus:us-west.sdsu": {
+      "start_delay": [
+        0
+      ],
+      "migration_emission": [],
+      "migration_duration": []
+    },
+    "Nautilus:us-central.usd": {
+      "start_delay": [
+        0
+      ],
+      "migration_emission": [],
+      "migration_duration": []
+    },
+    "Nautilus:us-west.caltech": {
+      "start_delay": [
+        0
+      ],
+      "migration_emission": [],
+      "migration_duration": []
+    },
+    "Nautilus:us-central.sdstate": {
+      "start_delay": [
+        0
+      ],
+      "migration_emission": [],
+      "migration_duration": []
+    },
+    "Nautilus:us-west.seattle": {
+      "start_delay": [
+        0
+      ],
+      "migration_emission": [],
+      "migration_duration": []
+    },
+    "Nautilus:us-east.starlight": {
+      "start_delay": [
+        0
+      ],
+      "migration_emission": [],
+      "migration_duration": []
+    },
+    "Nautilus:us-east.uic": {
+      "start_delay": [
+        0
+      ],
+      "migration_emission": [],
+      "migration_duration": []
+    },
+    "Nautilus:us-east.umich": {
+      "start_delay": [
+        0
+      ],
+      "migration_emission": [],
+      "migration_duration": []
+    },
+    "Nautilus:us-east.cwru": {
+      "start_delay": [
+        0
+      ],
+      "migration_emission": [],
+      "migration_duration": []
+    },
+    "Nautilus:ca-east.ottawa": {
+      "start_delay": [
+        0
+      ],
+      "migration_emission": [],
+      "migration_duration": []
+    },
+    "Nautilus:us-east.udel": {
+      "start_delay": [
+        0
+      ],
+      "migration_emission": [],
+      "migration_duration": []
+    },
+    "Nautilus:eu.uk": {
+      "start_delay": [
+        0
+      ],
+      "migration_emission": [],
+      "migration_duration": []
+    },
+    "Nautilus:eu.amsterdam": {
+      "start_delay": [
+        0
+      ],
+      "migration_emission": [],
+      "migration_duration": []
+    },
+    "AWS:us-west-1": {
+      "start_delay": [
+        0
+      ],
+      "migration_emission": [],
+      "migration_duration": []
+    },
+    "AWS:us-east-1": {
+      "start_delay": [
+        0
+      ],
+      "migration_emission": [],
+      "migration_duration": []
+    },
+    "AWS:us-east-2": {
+      "start_delay": [
+        0
+      ],
+      "migration_emission": [],
+      "migration_duration": []
+    },
+    "Azure:australiaeast": {
+      "start_delay": [
+        0
+      ],
+      "migration_emission": [],
+      "migration_duration": []
+    },
+    "Azure:australiasoutheast": {
+      "start_delay": [
+        0
+      ],
+      "migration_emission": [],
+      "migration_duration": []
+    },
+    "Azure:canadacentral": {
+      "start_delay": [
+        0
+      ],
+      "migration_emission": [],
+      "migration_duration": []
+    },
+    "Azure:canadaeast": {
+      "start_delay": [
+        0
+      ],
+      "migration_emission": [],
+      "migration_duration": []
+    },
+    "Azure:centralus": {
+      "start_delay": [
+        0
+      ],
+      "migration_emission": [],
+      "migration_duration": []
+    },
+    "Azure:eastus": {
+      "start_delay": [
+        0
+      ],
+      "migration_emission": [],
+      "migration_duration": []
+    },
+    "Azure:francecentral": {
+      "start_delay": [
+        0
+      ],
+      "migration_emission": [],
+      "migration_duration": []
+    },
+    "Azure:germanywestcentral": {
+      "start_delay": [
+        0
+      ],
+      "migration_emission": [],
+      "migration_duration": []
+    },
+    "Azure:northeurope": {
+      "start_delay": [
+        0
+      ],
+      "migration_emission": [],
+      "migration_duration": []
+    },
+    "Azure:norwayeast": {
+      "start_delay": [
+        0
+      ],
+      "migration_emission": [],
+      "migration_duration": []
+    },
+    "Azure:southcentralus": {
+      "start_delay": [
+        0
+      ],
+      "migration_emission": [],
+      "migration_duration": []
+    },
+    "Azure:swedencentral": {
+      "start_delay": [
+        0
+      ],
+      "migration_emission": [],
+      "migration_duration": []
+    },
+    "Azure:uksouth": {
+      "start_delay": [
+        0
+      ],
+      "migration_emission": [],
+      "migration_duration": []
+    },
+    "Azure:westcentralus": {
+      "start_delay": [
+        0
+      ],
+      "migration_emission": [],
+      "migration_duration": []
+    },
+    "Azure:westeurope": {
+      "start_delay": [
+        0
+      ],
+      "migration_emission": [],
+      "migration_duration": []
+    },
+    "Azure:westus": {
+      "start_delay": [
+        0
+      ],
+      "migration_emission": [],
+      "migration_duration": []
+    },
+    "Azure:westus2": {
+      "start_delay": [
+        0
+      ],
+      "migration_emission": [],
+      "migration_duration": []
+    },
+    "Azure:westus3": {
+      "start_delay": [
+        0
+      ],
+      "migration_emission": [],
+      "migration_duration": []
+    }
+  }
+}

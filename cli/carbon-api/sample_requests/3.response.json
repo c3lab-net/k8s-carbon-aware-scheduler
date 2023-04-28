@@ -1,0 +1,95 @@
+{
+  "request": {
+    "runtime": 900,
+    "schedule": {
+      "type": "onetime",
+      "start_time": "2023-04-28T19:30:00+00:00",
+      "interval": null,
+      "max_delay": 0
+    },
+    "dataset": {
+      "input_size_gb": 0,
+      "output_size_gb": 0
+    },
+    "original_location": null,
+    "candidate_providers": [],
+    "candidate_locations": [
+      {
+        "id": "Nautilus:us-west",
+        "latitude": 37.338208,
+        "longitude": -121.886329
+      },
+      {
+        "id": "Nautilus:us-central",
+        "latitude": 44.311357,
+        "longitude": -96.798388
+      },
+      {
+        "id": "Nautilus:us-east",
+        "latitude": 40.735657,
+        "longitude": -74.172367
+      }
+    ],
+    "carbon_data_source": "azure",
+    "use_prediction": true
+  },
+  "original-region": "None",
+  "selected-region": "Nautilus:us-west",
+  "isos": {
+    "Nautilus:us-west": "CAISO_NORTH",
+    "Nautilus:us-central": "MISO_WORTHINGTON",
+    "Nautilus:us-east": "PJM_NJ"
+  },
+  "weighted-scores": {
+    "Nautilus:us-west": 0.42860888429763894,
+    "Nautilus:us-central": 0.6488492226089352,
+    "Nautilus:us-east": 0.6627393661563427
+  },
+  "raw-scores": {
+    "Nautilus:us-west": {
+      "energy-usage": 0.00125,
+      "carbon-emission-from-compute": 3.582665289291667e-05,
+      "carbon-emission-from-migration": 0,
+      "carbon-emission": 3.582665289291667e-05,
+      "wan-network-usage": 0
+    },
+    "Nautilus:us-central": {
+      "energy-usage": 0.00125,
+      "carbon-emission-from-compute": 0.0006965476678268055,
+      "carbon-emission-from-migration": 0,
+      "carbon-emission": 0.0006965476678268055,
+      "wan-network-usage": 0
+    },
+    "Nautilus:us-east": {
+      "energy-usage": 0.00125,
+      "carbon-emission-from-compute": 0.0007382180984690278,
+      "carbon-emission-from-migration": 0,
+      "carbon-emission": 0.0007382180984690278,
+      "wan-network-usage": 0
+    }
+  },
+  "warnings": {},
+  "details": {
+    "Nautilus:us-west": {
+      "start_delay": [
+        0
+      ],
+      "migration_emission": [],
+      "migration_duration": []
+    },
+    "Nautilus:us-central": {
+      "start_delay": [
+        0
+      ],
+      "migration_emission": [],
+      "migration_duration": []
+    },
+    "Nautilus:us-east": {
+      "start_delay": [
+        0
+      ],
+      "migration_emission": [],
+      "migration_duration": []
+    }
+  }
+}

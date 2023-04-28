@@ -10,7 +10,9 @@
         "output_size_gb": 0
     },
     "candidate_providers": [
-        "Nautilus"
+        "Nautilus",
+        "AWS",
+        "Azure"
     ],
     "use_prediction": true,
     "carbon_data_source": "azure"
