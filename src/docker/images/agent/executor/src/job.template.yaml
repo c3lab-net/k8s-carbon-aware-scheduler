@@ -31,3 +31,12 @@ spec:
         # - name: VAR_vol_name
         #   persistentVolumeClaim:
         #     claimName: VAR_pvc_name
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+              - matchExpressions:
+                  - key: topology.kubernetes.io/region
+                    operator: In
+                    values:
+                      - VAL_node_region

@@ -13,6 +13,7 @@ from util import *
 from postgres import *
 
 APP_ROLE = get_env_var('APP_ROLE')
+REGION = get_env_var('REGION')
 
 def save_job_history(conn, job_id: str, event: str, timestamp: datetime):
     logging.info(f'Saving job history with job_id={job_id}, event={event}, timestamp={timestamp}')
@@ -133,6 +134,7 @@ class JobLauncher:
             container['volumeMounts'] = container_volume_mounts
             job_config['spec']['template']['spec']['volumes'] = all_volumes
             job_config['spec']['template']['spec']['containers'][0] = container
+            job_config['spec']['template']['spec']['affinity']['nodeAffinity']['requiredDuringSchedulingIgnoredDuringExecution']['nodeSelectorTerms'][0]['matchExpressions'][0]['values'] = [ REGION ]
             return job_config
         except Exception as ex:
             raise ValueError(f'Failed to create job config: {ex}') from ex
