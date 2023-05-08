@@ -31,4 +31,4 @@ JOB_SCHEDULER_URL=https://cas-job-scheduler.nrp-nautilus.io/job-status/
 
 set -x
 
-curl -s "$JOB_SCHEDULER_URL?$args"
+curl -s "$JOB_SCHEDULER_URL?$args" | jq

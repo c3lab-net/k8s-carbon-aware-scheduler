@@ -16,4 +16,4 @@ JOB_SCHEDULER_URL=https://cas-job-scheduler.nrp-nautilus.io/job-scheduler/
 
 set -x
 
-curl -s -X POST -H "Content-Type: application/json" -d @"$json_file" $JOB_SCHEDULER_URL
+curl -s -X POST -H "Content-Type: application/json" -d @"$json_file" $JOB_SCHEDULER_URL | jq
