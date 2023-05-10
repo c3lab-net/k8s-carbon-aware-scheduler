@@ -5,7 +5,8 @@ metadata:
     app: carbon-api
     project: carbon-aware-scheduler
     component: master
-  name: cas-carbon-api
+    environment: prod
+  name: cas-carbon-api-prod
 spec:
   ports:
   - port: 80
@@ -15,4 +16,5 @@ spec:
     app: carbon-api
     project: carbon-aware-scheduler
     component: master
+    environment: prod
   type: ClusterIP

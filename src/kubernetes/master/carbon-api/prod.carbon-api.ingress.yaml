@@ -1,7 +1,7 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: cas-carbon-api-ingress
+  name: cas-carbon-api-ingress-prod
   annotations:
     kubernetes.io/ingress.class: haproxy
 spec:
@@ -13,7 +13,7 @@ spec:
         pathType: Prefix
         backend:
           service:
-            name: cas-carbon-api
+            name: cas-carbon-api-prod
             port:
               number: 80
   tls:
