@@ -1,11 +1,12 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: cas.master.carbon-api
+  name: cas.master.carbon-api.dev
   labels:
     app: carbon-api
     project: carbon-aware-scheduler
     component: master
+    environment: dev
 spec:
   replicas: 1
   selector:
@@ -13,12 +14,14 @@ spec:
       project: carbon-aware-scheduler
       component: master
       app: carbon-api
+      environment: dev
   template:
     metadata:
       labels:
         project: carbon-aware-scheduler
         component: master
         app: carbon-api
+        environment: dev
     spec:
       containers:
       - name: cas-master-carbon-api
