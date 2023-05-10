@@ -1,0 +1,21 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: cas-carbon-api-ingress
+  annotations:
+    kubernetes.io/ingress.class: haproxy
+spec:
+  rules:
+  - host: cas-carbon-api.nrp-nautilus.io
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: cas-carbon-api
+            port:
+              number: 80
+  tls:
+  - hosts:
+    - cas-carbon-api.nrp-nautilus.io
