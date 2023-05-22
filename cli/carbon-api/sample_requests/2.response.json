@@ -3,7 +3,7 @@
     "runtime": 900,
     "schedule": {
       "type": "onetime",
-      "start_time": "2023-04-28T19:30:00+00:00",
+      "start_time": "2023-05-22T18:00:00+00:00",
       "interval": null,
       "max_delay": 0
     },
@@ -19,10 +19,14 @@
     ],
     "candidate_locations": [],
     "carbon_data_source": "azure",
-    "use_prediction": true
+    "use_prediction": true,
+    "watts_per_core": 5,
+    "core_count": 1
   },
   "original-region": "None",
-  "selected-region": "Nautilus:us-west.stanford",
+  "optimal-regions": [
+    "Azure:westus2"
+  ],
   "isos": {
     "Nautilus:us-west.stanford": "CAISO_NORTH",
     "Nautilus:us-west.ucsc": "CAISO_NORTH",
@@ -94,373 +98,373 @@
     "Nautilus:pacific.guam": null
   },
   "weighted-scores": {
-    "Nautilus:us-west.stanford": 0.42860888429763894,
-    "Nautilus:us-west.ucsc": 0.42860888429763894,
-    "Nautilus:us-west.ucsc-wa": 0.42860888429763894,
-    "Nautilus:us-west.ucsd-t2": 0.42860888429763894,
-    "Nautilus:us-west.cenic-la": 0.42860888429763894,
-    "Nautilus:us-west.ucsb": 0.42860888429763894,
-    "Nautilus:us-west.uci": 0.42860888429763894,
-    "Nautilus:us-west.ucr": 0.42860888429763894,
-    "Nautilus:us-west.ucsd-sdsc": 0.42860888429763894,
-    "Nautilus:us-west.csusb": 0.42860888429763894,
-    "Nautilus:us-west.ucsd": 0.42860888429763894,
-    "Nautilus:us-west.sdsu": 0.42860888429763894,
-    "Nautilus:us-central.usd": 0.6488492226089352,
-    "Nautilus:us-west.caltech": 0.6286764805191667,
-    "Nautilus:us-central.sdstate": 0.6488492226089352,
-    "Nautilus:us-west.seattle": 0.6286764805191667,
-    "Nautilus:us-east.starlight": 0.6627393661563427,
-    "Nautilus:us-east.uic": 0.6627393661563427,
-    "Nautilus:us-east.umich": 0.6488492226089352,
-    "Nautilus:us-east.cwru": 0.6627393661563427,
-    "Nautilus:ca-east.ottawa": 0.6079321953091666,
-    "Nautilus:us-east.udel": 0.6627393661563427,
-    "Nautilus:eu.uk": 0.5961852038825463,
-    "Nautilus:eu.amsterdam": 0.6293303329238888,
-    "AWS:us-west-1": 0.42860888429763894,
-    "AWS:us-east-1": 0.6627393661563427,
-    "AWS:us-east-2": 0.6627393661563427,
-    "Azure:australiaeast": 0.7550701731422684,
-    "Azure:australiasoutheast": 0.7181547167145371,
-    "Azure:canadacentral": 0.6079321953091666,
-    "Azure:canadaeast": 0.6009886808212963,
-    "Azure:centralus": 0.6488492226089352,
-    "Azure:eastus": 0.6627393661563427,
-    "Azure:francecentral": 0.5901165264244445,
-    "Azure:germanywestcentral": 0.738685826799537,
-    "Azure:northeurope": 0.6445896037093982,
-    "Azure:norwayeast": 0.5143318543194907,
-    "Azure:southcentralus": 0.6286764805191667,
-    "Azure:swedencentral": 0.7235124412880557,
-    "Azure:uksouth": 0.5961852038825463,
-    "Azure:westcentralus": 0.7143516786356945,
-    "Azure:westeurope": 0.6293303329238888,
-    "Azure:westus": 0.42860888429763894,
-    "Azure:westus2": 0.6414578519460185,
-    "Azure:westus3": 0.6515767491162037
+    "Nautilus:us-west.stanford": 0.4420296246501389,
+    "Nautilus:us-west.ucsc": 0.4420296246501389,
+    "Nautilus:us-west.ucsc-wa": 0.4420296246501389,
+    "Nautilus:us-west.ucsd-t2": 0.4420296246501389,
+    "Nautilus:us-west.cenic-la": 0.4420296246501389,
+    "Nautilus:us-west.ucsb": 0.4420296246501389,
+    "Nautilus:us-west.uci": 0.4420296246501389,
+    "Nautilus:us-west.ucr": 0.4420296246501389,
+    "Nautilus:us-west.ucsd-sdsc": 0.4420296246501389,
+    "Nautilus:us-west.csusb": 0.4420296246501389,
+    "Nautilus:us-west.ucsd": 0.4420296246501389,
+    "Nautilus:us-west.sdsu": 0.4420296246501389,
+    "Nautilus:us-central.usd": 0.6770002744630556,
+    "Nautilus:us-west.caltech": 0.6300943719516204,
+    "Nautilus:us-central.sdstate": 0.6770002744630556,
+    "Nautilus:us-west.seattle": 0.6300943719516204,
+    "Nautilus:us-east.starlight": 0.6648572825566204,
+    "Nautilus:us-east.uic": 0.6648572825566204,
+    "Nautilus:us-east.umich": 0.6770002744630556,
+    "Nautilus:us-east.cwru": 0.6648572825566204,
+    "Nautilus:ca-east.ottawa": 0.5951760634479166,
+    "Nautilus:us-east.udel": 0.6648572825566204,
+    "Nautilus:eu.uk": 0.5965566646141204,
+    "Nautilus:eu.amsterdam": 0.6357997134805092,
+    "AWS:us-west-1": 0.4420296246501389,
+    "AWS:us-east-1": 0.6648572825566204,
+    "AWS:us-east-2": 0.6648572825566204,
+    "Azure:australiaeast": 0.7393787459299075,
+    "Azure:australiasoutheast": 0.7291186163942592,
+    "Azure:canadacentral": 0.5951760634479166,
+    "Azure:canadaeast": 0.5932531384575462,
+    "Azure:centralus": 0.6770002744630556,
+    "Azure:eastus": 0.6648572825566204,
+    "Azure:francecentral": 0.5841508374681945,
+    "Azure:germanywestcentral": 0.745810936194213,
+    "Azure:northeurope": 0.6145568353391204,
+    "Azure:norwayeast": 0.5087124615096297,
+    "Azure:southcentralus": 0.6300943719516204,
+    "Azure:swedencentral": 0.7521516734069907,
+    "Azure:uksouth": 0.5965566646141204,
+    "Azure:westcentralus": 0.6869432329423147,
+    "Azure:westeurope": 0.6357997134805092,
+    "Azure:westus": 0.4420296246501389,
+    "Azure:westus2": 0.42321743823782404,
+    "Azure:westus3": 0.6268998058152315
   },
   "raw-scores": {
     "Nautilus:us-west.stanford": {
       "energy-usage": 0.00125,
-      "carbon-emission-from-compute": 3.582665289291667e-05,
+      "carbon-emission-from-compute": 7.608887395041667e-05,
       "carbon-emission-from-migration": 0,
-      "carbon-emission": 3.582665289291667e-05,
+      "carbon-emission": 7.608887395041667e-05,
       "wan-network-usage": 0
     },
     "Nautilus:us-west.ucsc": {
       "energy-usage": 0.00125,
-      "carbon-emission-from-compute": 3.582665289291667e-05,
+      "carbon-emission-from-compute": 7.608887395041667e-05,
       "carbon-emission-from-migration": 0,
-      "carbon-emission": 3.582665289291667e-05,
+      "carbon-emission": 7.608887395041667e-05,
       "wan-network-usage": 0
     },
     "Nautilus:us-west.ucsc-wa": {
       "energy-usage": 0.00125,
-      "carbon-emission-from-compute": 3.582665289291667e-05,
+      "carbon-emission-from-compute": 7.608887395041667e-05,
       "carbon-emission-from-migration": 0,
-      "carbon-emission": 3.582665289291667e-05,
+      "carbon-emission": 7.608887395041667e-05,
       "wan-network-usage": 0
     },
     "Nautilus:us-west.ucsd-t2": {
       "energy-usage": 0.00125,
-      "carbon-emission-from-compute": 3.582665289291667e-05,
+      "carbon-emission-from-compute": 7.608887395041667e-05,
       "carbon-emission-from-migration": 0,
-      "carbon-emission": 3.582665289291667e-05,
+      "carbon-emission": 7.608887395041667e-05,
       "wan-network-usage": 0
     },
     "Nautilus:us-west.cenic-la": {
       "energy-usage": 0.00125,
-      "carbon-emission-from-compute": 3.582665289291667e-05,
+      "carbon-emission-from-compute": 7.608887395041667e-05,
       "carbon-emission-from-migration": 0,
-      "carbon-emission": 3.582665289291667e-05,
+      "carbon-emission": 7.608887395041667e-05,
       "wan-network-usage": 0
     },
     "Nautilus:us-west.ucsb": {
       "energy-usage": 0.00125,
-      "carbon-emission-from-compute": 3.582665289291667e-05,
+      "carbon-emission-from-compute": 7.608887395041667e-05,
       "carbon-emission-from-migration": 0,
-      "carbon-emission": 3.582665289291667e-05,
+      "carbon-emission": 7.608887395041667e-05,
       "wan-network-usage": 0
     },
     "Nautilus:us-west.uci": {
       "energy-usage": 0.00125,
-      "carbon-emission-from-compute": 3.582665289291667e-05,
+      "carbon-emission-from-compute": 7.608887395041667e-05,
       "carbon-emission-from-migration": 0,
-      "carbon-emission": 3.582665289291667e-05,
+      "carbon-emission": 7.608887395041667e-05,
       "wan-network-usage": 0
     },
     "Nautilus:us-west.ucr": {
       "energy-usage": 0.00125,
-      "carbon-emission-from-compute": 3.582665289291667e-05,
+      "carbon-emission-from-compute": 7.608887395041667e-05,
       "carbon-emission-from-migration": 0,
-      "carbon-emission": 3.582665289291667e-05,
+      "carbon-emission": 7.608887395041667e-05,
       "wan-network-usage": 0
     },
     "Nautilus:us-west.ucsd-sdsc": {
       "energy-usage": 0.00125,
-      "carbon-emission-from-compute": 3.582665289291667e-05,
+      "carbon-emission-from-compute": 7.608887395041667e-05,
       "carbon-emission-from-migration": 0,
-      "carbon-emission": 3.582665289291667e-05,
+      "carbon-emission": 7.608887395041667e-05,
       "wan-network-usage": 0
     },
     "Nautilus:us-west.csusb": {
       "energy-usage": 0.00125,
-      "carbon-emission-from-compute": 3.582665289291667e-05,
+      "carbon-emission-from-compute": 7.608887395041667e-05,
       "carbon-emission-from-migration": 0,
-      "carbon-emission": 3.582665289291667e-05,
+      "carbon-emission": 7.608887395041667e-05,
       "wan-network-usage": 0
     },
     "Nautilus:us-west.ucsd": {
       "energy-usage": 0.00125,
-      "carbon-emission-from-compute": 3.582665289291667e-05,
+      "carbon-emission-from-compute": 7.608887395041667e-05,
       "carbon-emission-from-migration": 0,
-      "carbon-emission": 3.582665289291667e-05,
+      "carbon-emission": 7.608887395041667e-05,
       "wan-network-usage": 0
     },
     "Nautilus:us-west.sdsu": {
       "energy-usage": 0.00125,
-      "carbon-emission-from-compute": 3.582665289291667e-05,
+      "carbon-emission-from-compute": 7.608887395041667e-05,
       "carbon-emission-from-migration": 0,
-      "carbon-emission": 3.582665289291667e-05,
+      "carbon-emission": 7.608887395041667e-05,
       "wan-network-usage": 0
     },
     "Nautilus:us-central.usd": {
       "energy-usage": 0.00125,
-      "carbon-emission-from-compute": 0.0006965476678268055,
+      "carbon-emission-from-compute": 0.0007810008233891666,
       "carbon-emission-from-migration": 0,
-      "carbon-emission": 0.0006965476678268055,
+      "carbon-emission": 0.0007810008233891666,
       "wan-network-usage": 0
     },
     "Nautilus:us-west.caltech": {
       "energy-usage": 0.00125,
-      "carbon-emission-from-compute": 0.0006360294415575001,
+      "carbon-emission-from-compute": 0.0006402831158548611,
       "carbon-emission-from-migration": 0,
-      "carbon-emission": 0.0006360294415575001,
+      "carbon-emission": 0.0006402831158548611,
       "wan-network-usage": 0
     },
     "Nautilus:us-central.sdstate": {
       "energy-usage": 0.00125,
-      "carbon-emission-from-compute": 0.0006965476678268055,
+      "carbon-emission-from-compute": 0.0007810008233891666,
       "carbon-emission-from-migration": 0,
-      "carbon-emission": 0.0006965476678268055,
+      "carbon-emission": 0.0007810008233891666,
       "wan-network-usage": 0
     },
     "Nautilus:us-west.seattle": {
       "energy-usage": 0.00125,
-      "carbon-emission-from-compute": 0.0006360294415575001,
+      "carbon-emission-from-compute": 0.0006402831158548611,
       "carbon-emission-from-migration": 0,
-      "carbon-emission": 0.0006360294415575001,
+      "carbon-emission": 0.0006402831158548611,
       "wan-network-usage": 0
     },
     "Nautilus:us-east.starlight": {
       "energy-usage": 0.00125,
-      "carbon-emission-from-compute": 0.0007382180984690278,
+      "carbon-emission-from-compute": 0.0007445718476698611,
       "carbon-emission-from-migration": 0,
-      "carbon-emission": 0.0007382180984690278,
+      "carbon-emission": 0.0007445718476698611,
       "wan-network-usage": 0
     },
     "Nautilus:us-east.uic": {
       "energy-usage": 0.00125,
-      "carbon-emission-from-compute": 0.0007382180984690278,
+      "carbon-emission-from-compute": 0.0007445718476698611,
       "carbon-emission-from-migration": 0,
-      "carbon-emission": 0.0007382180984690278,
+      "carbon-emission": 0.0007445718476698611,
       "wan-network-usage": 0
     },
     "Nautilus:us-east.umich": {
       "energy-usage": 0.00125,
-      "carbon-emission-from-compute": 0.0006965476678268055,
+      "carbon-emission-from-compute": 0.0007810008233891666,
       "carbon-emission-from-migration": 0,
-      "carbon-emission": 0.0006965476678268055,
+      "carbon-emission": 0.0007810008233891666,
       "wan-network-usage": 0
     },
     "Nautilus:us-east.cwru": {
       "energy-usage": 0.00125,
-      "carbon-emission-from-compute": 0.0007382180984690278,
+      "carbon-emission-from-compute": 0.0007445718476698611,
       "carbon-emission-from-migration": 0,
-      "carbon-emission": 0.0007382180984690278,
+      "carbon-emission": 0.0007445718476698611,
       "wan-network-usage": 0
     },
     "Nautilus:ca-east.ottawa": {
       "energy-usage": 0.00125,
-      "carbon-emission-from-compute": 0.0005737965859275,
+      "carbon-emission-from-compute": 0.0005355281903437499,
       "carbon-emission-from-migration": 0,
-      "carbon-emission": 0.0005737965859275,
+      "carbon-emission": 0.0005355281903437499,
       "wan-network-usage": 0
     },
     "Nautilus:us-east.udel": {
       "energy-usage": 0.00125,
-      "carbon-emission-from-compute": 0.0007382180984690278,
+      "carbon-emission-from-compute": 0.0007445718476698611,
       "carbon-emission-from-migration": 0,
-      "carbon-emission": 0.0007382180984690278,
+      "carbon-emission": 0.0007445718476698611,
       "wan-network-usage": 0
     },
     "Nautilus:eu.uk": {
       "energy-usage": 0.00125,
-      "carbon-emission-from-compute": 0.0005385556116476388,
+      "carbon-emission-from-compute": 0.0005396699938423612,
       "carbon-emission-from-migration": 0,
-      "carbon-emission": 0.0005385556116476388,
+      "carbon-emission": 0.0005396699938423612,
       "wan-network-usage": 0
     },
     "Nautilus:eu.amsterdam": {
       "energy-usage": 0.00125,
-      "carbon-emission-from-compute": 0.0006379909987716667,
+      "carbon-emission-from-compute": 0.0006573991404415278,
       "carbon-emission-from-migration": 0,
-      "carbon-emission": 0.0006379909987716667,
+      "carbon-emission": 0.0006573991404415278,
       "wan-network-usage": 0
     },
     "AWS:us-west-1": {
       "energy-usage": 0.00125,
-      "carbon-emission-from-compute": 3.582665289291667e-05,
+      "carbon-emission-from-compute": 7.608887395041667e-05,
       "carbon-emission-from-migration": 0,
-      "carbon-emission": 3.582665289291667e-05,
+      "carbon-emission": 7.608887395041667e-05,
       "wan-network-usage": 0
     },
     "AWS:us-east-1": {
       "energy-usage": 0.00125,
-      "carbon-emission-from-compute": 0.0007382180984690278,
+      "carbon-emission-from-compute": 0.0007445718476698611,
       "carbon-emission-from-migration": 0,
-      "carbon-emission": 0.0007382180984690278,
+      "carbon-emission": 0.0007445718476698611,
       "wan-network-usage": 0
     },
     "AWS:us-east-2": {
       "energy-usage": 0.00125,
-      "carbon-emission-from-compute": 0.0007382180984690278,
+      "carbon-emission-from-compute": 0.0007445718476698611,
       "carbon-emission-from-migration": 0,
-      "carbon-emission": 0.0007382180984690278,
+      "carbon-emission": 0.0007445718476698611,
       "wan-network-usage": 0
     },
     "Azure:australiaeast": {
       "energy-usage": 0.00125,
-      "carbon-emission-from-compute": 0.0010152105194268055,
+      "carbon-emission-from-compute": 0.0009681362377897222,
       "carbon-emission-from-migration": 0,
-      "carbon-emission": 0.0010152105194268055,
+      "carbon-emission": 0.0009681362377897222,
       "wan-network-usage": 0
     },
     "Azure:australiasoutheast": {
       "energy-usage": 0.00125,
-      "carbon-emission-from-compute": 0.0009044641501436111,
+      "carbon-emission-from-compute": 0.0009373558491827778,
       "carbon-emission-from-migration": 0,
-      "carbon-emission": 0.0009044641501436111,
+      "carbon-emission": 0.0009373558491827778,
       "wan-network-usage": 0
     },
     "Azure:canadacentral": {
       "energy-usage": 0.00125,
-      "carbon-emission-from-compute": 0.0005737965859275,
+      "carbon-emission-from-compute": 0.0005355281903437499,
       "carbon-emission-from-migration": 0,
-      "carbon-emission": 0.0005737965859275,
+      "carbon-emission": 0.0005355281903437499,
       "wan-network-usage": 0
     },
     "Azure:canadaeast": {
       "energy-usage": 0.00125,
-      "carbon-emission-from-compute": 0.000552966042463889,
+      "carbon-emission-from-compute": 0.0005297594153726389,
       "carbon-emission-from-migration": 0,
-      "carbon-emission": 0.000552966042463889,
+      "carbon-emission": 0.0005297594153726389,
       "wan-network-usage": 0
     },
     "Azure:centralus": {
       "energy-usage": 0.00125,
-      "carbon-emission-from-compute": 0.0006965476678268055,
+      "carbon-emission-from-compute": 0.0007810008233891666,
       "carbon-emission-from-migration": 0,
-      "carbon-emission": 0.0006965476678268055,
+      "carbon-emission": 0.0007810008233891666,
       "wan-network-usage": 0
     },
     "Azure:eastus": {
       "energy-usage": 0.00125,
-      "carbon-emission-from-compute": 0.0007382180984690278,
+      "carbon-emission-from-compute": 0.0007445718476698611,
       "carbon-emission-from-migration": 0,
-      "carbon-emission": 0.0007382180984690278,
+      "carbon-emission": 0.0007445718476698611,
       "wan-network-usage": 0
     },
     "Azure:francecentral": {
       "energy-usage": 0.00125,
-      "carbon-emission-from-compute": 0.0005203495792733333,
+      "carbon-emission-from-compute": 0.0005024525124045834,
       "carbon-emission-from-migration": 0,
-      "carbon-emission": 0.0005203495792733333,
+      "carbon-emission": 0.0005024525124045834,
       "wan-network-usage": 0
     },
     "Azure:germanywestcentral": {
       "energy-usage": 0.00125,
-      "carbon-emission-from-compute": 0.0009660574803986111,
+      "carbon-emission-from-compute": 0.0009874328085826389,
       "carbon-emission-from-migration": 0,
-      "carbon-emission": 0.0009660574803986111,
+      "carbon-emission": 0.0009874328085826389,
       "wan-network-usage": 0
     },
     "Azure:northeurope": {
       "energy-usage": 0.00125,
-      "carbon-emission-from-compute": 0.0006837688111281945,
+      "carbon-emission-from-compute": 0.0005936705060173612,
       "carbon-emission-from-migration": 0,
-      "carbon-emission": 0.0006837688111281945,
+      "carbon-emission": 0.0005936705060173612,
       "wan-network-usage": 0
     },
     "Azure:norwayeast": {
       "energy-usage": 0.00125,
-      "carbon-emission-from-compute": 0.0002929955629584722,
+      "carbon-emission-from-compute": 0.0002761373845288889,
       "carbon-emission-from-migration": 0,
-      "carbon-emission": 0.0002929955629584722,
+      "carbon-emission": 0.0002761373845288889,
       "wan-network-usage": 0
     },
     "Azure:southcentralus": {
       "energy-usage": 0.00125,
-      "carbon-emission-from-compute": 0.0006360294415575001,
+      "carbon-emission-from-compute": 0.0006402831158548611,
       "carbon-emission-from-migration": 0,
-      "carbon-emission": 0.0006360294415575001,
+      "carbon-emission": 0.0006402831158548611,
       "wan-network-usage": 0
     },
     "Azure:swedencentral": {
       "energy-usage": 0.00125,
-      "carbon-emission-from-compute": 0.0009205373238641667,
+      "carbon-emission-from-compute": 0.0010064550202209723,
       "carbon-emission-from-migration": 0,
-      "carbon-emission": 0.0009205373238641667,
+      "carbon-emission": 0.0010064550202209723,
       "wan-network-usage": 0
     },
     "Azure:uksouth": {
       "energy-usage": 0.00125,
-      "carbon-emission-from-compute": 0.0005385556116476388,
+      "carbon-emission-from-compute": 0.0005396699938423612,
       "carbon-emission-from-migration": 0,
-      "carbon-emission": 0.0005385556116476388,
+      "carbon-emission": 0.0005396699938423612,
       "wan-network-usage": 0
     },
     "Azure:westcentralus": {
       "energy-usage": 0.00125,
-      "carbon-emission-from-compute": 0.0008930550359070834,
+      "carbon-emission-from-compute": 0.0008108296988269444,
       "carbon-emission-from-migration": 0,
-      "carbon-emission": 0.0008930550359070834,
+      "carbon-emission": 0.0008108296988269444,
       "wan-network-usage": 0
     },
     "Azure:westeurope": {
       "energy-usage": 0.00125,
-      "carbon-emission-from-compute": 0.0006379909987716667,
+      "carbon-emission-from-compute": 0.0006573991404415278,
       "carbon-emission-from-migration": 0,
-      "carbon-emission": 0.0006379909987716667,
+      "carbon-emission": 0.0006573991404415278,
       "wan-network-usage": 0
     },
     "Azure:westus": {
       "energy-usage": 0.00125,
-      "carbon-emission-from-compute": 3.582665289291667e-05,
+      "carbon-emission-from-compute": 7.608887395041667e-05,
       "carbon-emission-from-migration": 0,
-      "carbon-emission": 3.582665289291667e-05,
+      "carbon-emission": 7.608887395041667e-05,
       "wan-network-usage": 0
     },
     "Azure:westus2": {
       "energy-usage": 0.00125,
-      "carbon-emission-from-compute": 0.0006743735558380555,
+      "carbon-emission-from-compute": 1.9652314713472223e-05,
       "carbon-emission-from-migration": 0,
-      "carbon-emission": 0.0006743735558380555,
+      "carbon-emission": 1.9652314713472223e-05,
       "wan-network-usage": 0
     },
     "Azure:westus3": {
       "energy-usage": 0.00125,
-      "carbon-emission-from-compute": 0.0007047302473486111,
+      "carbon-emission-from-compute": 0.0006306994174456945,
       "carbon-emission-from-migration": 0,
-      "carbon-emission": 0.0007047302473486111,
+      "carbon-emission": 0.0006306994174456945,
       "wan-network-usage": 0
     }
   },
   "warnings": {
-    "Nautilus:pacific.hawaii": "No carbon data found for iso None in time range (2023-04-28 19:30:00+00:00, 2023-04-28 19:45:00+00:00)",
-    "Nautilus:pacific.korea": "No carbon data found for iso None in time range (2023-04-28 19:30:00+00:00, 2023-04-28 19:45:00+00:00)",
-    "Nautilus:pacific.guam": "No carbon data found for iso None in time range (2023-04-28 19:30:00+00:00, 2023-04-28 19:45:00+00:00)",
+    "Nautilus:pacific.hawaii": "No carbon data found for iso None in time range (2023-05-22 18:00:00+00:00, 2023-05-22 18:15:00+00:00)",
+    "Nautilus:pacific.korea": "No carbon data found for iso None in time range (2023-05-22 18:00:00+00:00, 2023-05-22 18:15:00+00:00)",
+    "Nautilus:pacific.guam": "No carbon data found for iso None in time range (2023-05-22 18:00:00+00:00, 2023-05-22 18:15:00+00:00)",
     "Nautilus:us-west.ucmerced": "Unknown azure region for iso TID",
     "Nautilus:us-west.usc": "Unknown azure region for iso LDWP",
     "Nautilus:us-mountain.unm": "Unknown azure region for iso PNM",

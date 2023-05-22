@@ -12,7 +12,7 @@ if ! [ -f "$json_file" ]; then
     exit 1
 fi
 
-CARBON_API_URL=https://cas-carbon-api.nrp-nautilus.io/carbon-aware-scheduler/
+CARBON_API_URL=https://cas-carbon-api-dev.nrp-nautilus.io/carbon-aware-scheduler/
 
 set -x
 

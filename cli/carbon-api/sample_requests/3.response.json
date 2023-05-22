@@ -3,7 +3,7 @@
     "runtime": 900,
     "schedule": {
       "type": "onetime",
-      "start_time": "2023-04-28T19:30:00+00:00",
+      "start_time": "2023-05-22T18:00:00+00:00",
       "interval": null,
       "max_delay": 0
     },
@@ -31,40 +31,44 @@
       }
     ],
     "carbon_data_source": "azure",
-    "use_prediction": true
+    "use_prediction": true,
+    "watts_per_core": 5,
+    "core_count": 1
   },
   "original-region": "None",
-  "selected-region": "Nautilus:us-west",
+  "optimal-regions": [
+    "Nautilus:us-west"
+  ],
   "isos": {
     "Nautilus:us-west": "CAISO_NORTH",
     "Nautilus:us-central": "MISO_WORTHINGTON",
     "Nautilus:us-east": "PJM_NJ"
   },
   "weighted-scores": {
-    "Nautilus:us-west": 0.42860888429763894,
-    "Nautilus:us-central": 0.6488492226089352,
-    "Nautilus:us-east": 0.6627393661563427
+    "Nautilus:us-west": 0.4420296246501389,
+    "Nautilus:us-central": 0.6770002744630556,
+    "Nautilus:us-east": 0.6648572825566204
   },
   "raw-scores": {
     "Nautilus:us-west": {
       "energy-usage": 0.00125,
-      "carbon-emission-from-compute": 3.582665289291667e-05,
+      "carbon-emission-from-compute": 7.608887395041667e-05,
       "carbon-emission-from-migration": 0,
-      "carbon-emission": 3.582665289291667e-05,
+      "carbon-emission": 7.608887395041667e-05,
       "wan-network-usage": 0
     },
     "Nautilus:us-central": {
       "energy-usage": 0.00125,
-      "carbon-emission-from-compute": 0.0006965476678268055,
+      "carbon-emission-from-compute": 0.0007810008233891666,
       "carbon-emission-from-migration": 0,
-      "carbon-emission": 0.0006965476678268055,
+      "carbon-emission": 0.0007810008233891666,
       "wan-network-usage": 0
     },
     "Nautilus:us-east": {
       "energy-usage": 0.00125,
-      "carbon-emission-from-compute": 0.0007382180984690278,
+      "carbon-emission-from-compute": 0.0007445718476698611,
       "carbon-emission-from-migration": 0,
-      "carbon-emission": 0.0007382180984690278,
+      "carbon-emission": 0.0007445718476698611,
       "wan-network-usage": 0
     }
   },
