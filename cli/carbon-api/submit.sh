@@ -13,6 +13,7 @@ if ! [ -f "$json_file" ]; then
 fi
 
 CARBON_API_URL=https://cas-carbon-api-dev.nrp-nautilus.io/carbon-aware-scheduler/
+# CARBON_API_URL=http://localhost:8082/carbon-aware-scheduler/
 
 set -x
 
