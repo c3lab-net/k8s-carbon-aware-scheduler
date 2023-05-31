@@ -25,7 +25,7 @@ spec:
     spec:
       containers:
       - name: cas-master-carbon-api
-        image: gitlab-registry.nrp-nautilus.io/c3lab/carbon-aware-scheduler/master.carbon-api:0.1
+        image: gitlab-registry.nrp-nautilus.io/c3lab/carbon-aware-scheduler/master.carbon-api.rest-api:0.1
         imagePullPolicy: Always
         env:
           - name: LABEL_COMPONENT
