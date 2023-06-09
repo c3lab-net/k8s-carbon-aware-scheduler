@@ -1,0 +1,8 @@
+FROM python:3.10-slim-bullseye
+
+RUN pip3 install fastapi "uvicorn[standard]"
+
+ADD src /
+WORKDIR /
+
+CMD [ "uvicorn", "main:app", "--host", "0.0.0.0", "--port", "80" ]
