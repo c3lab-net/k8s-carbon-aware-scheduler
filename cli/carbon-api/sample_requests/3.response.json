@@ -3,7 +3,7 @@
     "runtime": 900,
     "schedule": {
       "type": "onetime",
-      "start_time": "2023-05-22T18:00:00+00:00",
+      "start_time": "2023-05-24T22:00:00+00:00",
       "interval": null,
       "max_delay": 0
     },
@@ -32,12 +32,30 @@
     ],
     "carbon_data_source": "azure",
     "use_prediction": true,
+    "desired_renewable_ratio": null,
     "watts_per_core": 5,
     "core_count": 1
   },
   "original-region": "None",
   "optimal-regions": [
-    "Nautilus:us-west"
+    {
+      "rating": 0.42821112898736113,
+      "candidates": [
+        "Nautilus:us-west"
+      ]
+    },
+    {
+      "rating": 0.656473324830602,
+      "candidates": [
+        "Nautilus:us-east"
+      ]
+    },
+    {
+      "rating": 0.6753069779952777,
+      "candidates": [
+        "Nautilus:us-central"
+      ]
+    }
   ],
   "isos": {
     "Nautilus:us-west": "CAISO_NORTH",
@@ -45,30 +63,30 @@
     "Nautilus:us-east": "PJM_NJ"
   },
   "weighted-scores": {
-    "Nautilus:us-west": 0.4420296246501389,
-    "Nautilus:us-central": 0.6770002744630556,
-    "Nautilus:us-east": 0.6648572825566204
+    "Nautilus:us-west": 0.42821112898736113,
+    "Nautilus:us-central": 0.6753069779952777,
+    "Nautilus:us-east": 0.656473324830602
   },
   "raw-scores": {
     "Nautilus:us-west": {
       "energy-usage": 0.00125,
-      "carbon-emission-from-compute": 7.608887395041667e-05,
+      "carbon-emission-from-compute": 3.463338696208333e-05,
       "carbon-emission-from-migration": 0,
-      "carbon-emission": 7.608887395041667e-05,
+      "carbon-emission": 3.463338696208333e-05,
       "wan-network-usage": 0
     },
     "Nautilus:us-central": {
       "energy-usage": 0.00125,
-      "carbon-emission-from-compute": 0.0007810008233891666,
+      "carbon-emission-from-compute": 0.0007759209339858334,
       "carbon-emission-from-migration": 0,
-      "carbon-emission": 0.0007810008233891666,
+      "carbon-emission": 0.0007759209339858334,
       "wan-network-usage": 0
     },
     "Nautilus:us-east": {
       "energy-usage": 0.00125,
-      "carbon-emission-from-compute": 0.0007445718476698611,
+      "carbon-emission-from-compute": 0.0007194199744918056,
       "carbon-emission-from-migration": 0,
-      "carbon-emission": 0.0007445718476698611,
+      "carbon-emission": 0.0007194199744918056,
       "wan-network-usage": 0
     }
   },
