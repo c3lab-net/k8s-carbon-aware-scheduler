@@ -9,8 +9,7 @@ Nodes information can be collected via `kubectl` utility and saved as a JSON fil
 Then we can extract name, region and zone into a CSV file:
 
     cat allnodes.kubectl.json | \
-    jq -r '.items[] | .metadata.name, .metadata.labels["topology.kubernetes.io/region"], .metadata.labels["topology.kubernetes.io/zone"]' | \
-    paste -d'\t' - - - > allnodes.kubectl.tsv
+    jq -r '.items[] | [.metadata.name, .metadata.labels["topology.kubernetes.io/region"], .metadata.labels["topology.kubernetes.io/zone"]] | @tsv' > allnodes.kubectl.tsv
 
 ## Node gps info
 The JSON data is retrieved from [this dashboard portal](https://elastic-igrok.nrp-nautilus.io/app/discover#/) by following these steps:
