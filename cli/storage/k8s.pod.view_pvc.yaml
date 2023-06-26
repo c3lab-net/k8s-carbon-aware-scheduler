@@ -36,3 +36,12 @@ spec:
   restartPolicy: Never
   imagePullSecrets:
     - name: regcred
+  affinity:
+    nodeAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        nodeSelectorTerms:
+          - matchExpressions:
+              - key: topology.kubernetes.io/region
+                operator: In
+                values:
+                  - VAL_node_region

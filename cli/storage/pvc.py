@@ -26,7 +26,7 @@ class PvcStorageClass:
 
 def load_pvc_storage_classes_from_config():
     """Load available PVC storage classes from config file."""
-    # TSV source: https://ucsd-prp.gitlab.io/userdocs/storage/ceph-posix/
+    # TSV source: https://ucsd-prp.gitlab.io/userdocs/storage/ceph/
     pvc_storage_classes_file = os.path.join(
         os.path.dirname(os.path.realpath(__file__)),
         "pvc.storage_classes.tsv")
@@ -59,6 +59,16 @@ def get_pvc_storage_class(region: str, filesystem_type: str) -> PvcStorageClass:
         raise ValueError(f'No matching PVC storage class for'
                             f' region="{region}" and'
                             f' filesystem type="{filesystem_type}"') \
+            from ex
+
+def get_pvc_region_from_storage_class(storage_class: str) -> str:
+    """Get the first matching PVC storage class' region."""
+    try:
+        return next(filter(lambda pvc:
+            pvc.storage_class == storage_class, PVC_STORAGE_CLASSES)).region
+    except StopIteration as ex:
+        raise ValueError(f'No matching PVC storage class for'
+                            f' storage_class="{storage_class}"') \
             from ex
 
 PVC_STORAGE_CLASSES = load_pvc_storage_classes_from_config()
@@ -145,6 +155,29 @@ def exist_pvc(name):
             return False
         raise
 
+def get_pvc_region(name):
+    """Get the region of a PVC."""
+    try:
+        storage_class = run_command(f'kubectl get pvc {quote(name)} ' +
+                                quote('-o=jsonpath={.spec.storageClassName}'), print_command=True)
+        region_friendly_name = get_pvc_region_from_storage_class(storage_class)
+        map_region_name_to_k8s_label = {
+            'US West': 'us-west',
+            'US Central': 'us-central',
+            'US East': 'us-east',
+            'Hawaii+Guam': 'pacific',
+            'US South East': 'us-west',
+        }
+        if region_friendly_name in map_region_name_to_k8s_label:
+            return map_region_name_to_k8s_label[region_friendly_name]
+        else:
+            raise ValueError(f'Unknown k8s region for storage region "{region_friendly_name}"')
+    except ValueError as ex:
+        if 'NotFound' in str(ex):
+            raise
+        print('Failed to get region of node. Defaulting to us-west ...')
+        return 'us-west'
+
 def view_pvc(name):
     """Launch an interactive pod to view the pvc."""
     print('Launching a temporary pod with PVC attached ...')
@@ -157,6 +190,8 @@ def view_pvc(name):
     for i, volume in enumerate(view_pvc_pod_config['spec']['volumes']):
         if volume['name'] == 'pvc-vol':
             view_pvc_pod_config['spec']['volumes'][i]['persistentVolumeClaim']['claimName'] = name
+    pvc_region = get_pvc_region(name)
+    view_pvc_pod_config['spec']['affinity']['nodeAffinity']['requiredDuringSchedulingIgnoredDuringExecution']['nodeSelectorTerms'][0]['matchExpressions'][0]['values'] = [ pvc_region ]
     json_override = json.dumps(view_pvc_pod_config)
     random_name = get_random_name()
     cmd = shlex.split(f'kubectl run -i --rm --tty view-pvc-{quote(random_name)}'
