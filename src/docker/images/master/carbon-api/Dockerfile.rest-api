@@ -1,7 +1,7 @@
 FROM gitlab-registry.nrp-nautilus.io/c3lab/common/python-flask:3.10-bullseye
 MAINTAINER Yibo Guo <nil.yibo@gmail.com>
 
-RUN pip3 install numpy arrow requests pyyaml
+RUN pip3 install numpy arrow requests pyyaml pandas
 RUN pip3 install psycopg2-binary marshmallow_dataclass
 RUN pip3 install Flask-Caching
 
