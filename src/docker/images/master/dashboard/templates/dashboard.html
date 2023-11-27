@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="../static/styles.css" />
+    <title>Dashboard</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+</head>
+<body>    
+    <div class="container">
+
+        <div class="tabs">
+            <button class="tabLinks" onclick="openTab(event, 'plotsPage')">Plots</button>
+            <button class="tabLinks" onclick="openTab(event, 'tablePage')">Table</button>
+            <button class="tabLinks" onclick="openTab(event, 'carbonDataPage')">Carbon Data</button>
+        </div>
+
+        <div id="plotsPage" class="tabContent" style="width: 100%">
+            <h3>Filter by Job Status</h3>
+            <select id="jobFilters" class="filterSelector" onChange="getPlotsFilteredByJobStatus(this)">
+                <option value="ActiveJobs">Active Jobs</option>
+                <option value="Created">Created</option>
+                <option value="Enqueued">Enqueued</option>
+                <option value="Dequeued">Dequeued</option>
+                <option value="Started">Started</option>
+                <option value="Completed">Completed</option>
+            </select>
+            <div id="num_jobs_graph" class="plot" style="width: 100%"></div>
+
+            <h3>Filter by Job Status</h3>
+            <select id="coreFilters" class="filterSelector" onChange="getPlotsFilteredByJobStatus(this)">
+                <option value="ActiveJobs">Active Jobs</option>
+                <option value="Created">Created</option>
+                <option value="Enqueued">Enqueued</option>
+                <option value="Dequeued">Dequeued</option>
+                <option value="Started">Started</option>
+                <option value="Completed">Completed</option>
+            </select>
+            <div id="num_cores_graph" class="plot"></div>
+        </div>
+    </div>
+</body>
+
+<script src='https://cdn.plot.ly/plotly-latest.min.js'></script>
+<script type='text/javascript'>
+  /*  
+  let graph_num_jobs = {{graphJSON_num_jobs| safe}};
+  Plotly.plot('num_jobs_graph',graph_num_jobs,{});
+
+  let graph_num_cores = {{graphJSON_num_cores | safe}};
+  Plotly.plot('num_cores_graph',graph_num_cores,{});
+  */
+  
+
+window.onload = function() {
+    let graph_num_jobs = {{graphJSON_num_jobs | safe}};
+    Plotly.plot('num_jobs_graph', graph_num_jobs, {});
+
+    let graph_num_cores = {{graphJSON_num_cores | safe}};
+    Plotly.plot('num_cores_graph',graph_num_cores,{});
+
+    document.getElementById('plotsPage').style.display = "inline";
+}
+
+function getPlotsFilteredByJobStatus(selector) {
+    let filter = selector.value;
+    let subject = selector.id === 'jobFilters' ? 'jobs' : 'cores';
+
+    $.ajax({
+        url: "/dashboard",
+        type: "post",
+        contentType: 'application/json;charset=UTF-8',
+        data: JSON.stringify({
+            'subject': subject,
+            'filter': filter
+        }),
+        dataType:"json",
+        success: function (data) {
+            graphName = subject == 'jobs' ? 'num_jobs_graph' : 'num_cores_graph';
+            var figure = JSON.parse(data);
+            Plotly.newPlot(graphName, figure.data, figure.layout);
+        }
+    });
+}
+
+function getPlotsPage() {
+    var trace1 = {
+    type: 'bar',
+    x: [1, 2, 3, 4],
+    y: [5, 10, 2, 8],
+    marker: {
+        color: '#C8A2C8',
+        line: {
+            width: 2.5
+        }
+    }
+    };
+
+    var data = [ trace1 ];
+
+    var layout = { 
+    title: 'Responsive to window\'s size!',
+    font: {size: 18}
+    };
+
+    var config = {responsive: true}
+
+    Plotly.newPlot('num_jobs_graph', data, layout, config );
+
+
+
+
+
+    let graph_num_jobs = {{graphJSON_num_jobs | safe}};
+    //Plotly.newPlot('num_jobs_graph',graph_num_jobs,{}, {responsive: true});
+
+    let graph_num_cores = {{graphJSON_num_cores | safe}};
+    Plotly.plot('num_cores_graph',graph_num_cores,{});
+
+    document.getElementById('plotsPage').style.display = "inline";
+}
+
+function openTab(e, tabName) {
+    console.log(tabName);
+    
+    switch (tabName) {
+        case "plotsPage":
+            return;
+        case "tablePage":
+            window.location.replace("table");
+            return;
+        case "carbonDataPage":
+            window.location.replace("carbonData");
+            return;
+        default:
+            return;
+    }
+}
+
+</script>
+
+</html>

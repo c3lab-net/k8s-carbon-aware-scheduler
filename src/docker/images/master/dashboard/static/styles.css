@@ -1,0 +1,73 @@
+.tabs {
+    overflow: hidden;
+    border: 1px solid #ccc;
+    background-color: #f1f1f1;
+}
+
+.tabs button {
+    background-color: inherit;
+    float: left;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    padding: 14px 16px;
+    transition: 0.3s;
+}
+
+.tab button:hover {
+    background-color: #ddd;
+}
+
+.tab button.active {
+    background-color: #ccc;
+}
+
+.tabContent {
+    display: none
+}
+
+.plot {
+    width: 50%;
+}
+
+.table_root {
+    border-spacing: 0;
+    margin: 0px auto;
+    background-color: #f5f5f5;
+}
+
+.table_row:nth-child(even) {
+    background-color: #e5e5e5;
+}
+
+.table_header {
+    text-align: center;
+}
+
+.table_cell {
+    padding: 8px;
+}
+
+.inputContainer {
+    display: flex;
+    justify-content: center;
+    margin: 20px;
+}
+
+.input {
+    width: 300px;
+    margin-right: 5px;
+}
+
+.jobTableButtonsContainer {
+    margin: 10px;
+}
+
+.tableContainer {
+    text-align: center;
+    margin: 20px;
+}
+
+.dt-body-right{
+    text-align: center;
+}

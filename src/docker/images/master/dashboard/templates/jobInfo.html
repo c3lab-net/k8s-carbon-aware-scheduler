@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="../static/styles.css" />
+    <title>Table</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.datatables.net/v/bs5-5.3.0/datatables.min.css" rel="stylesheet">
+    
+    <link href="https://cdn.datatables.net/v/dt/dt-1.13.7/datatables.min.css" rel="stylesheet">
+ 
+    <script src="https://cdn.datatables.net/v/dt/dt-1.13.7/datatables.min.js"></script>
+</head>
+<body>    
+    <div class="container">
+
+        <div class="tabs">
+            <button class="tabLinks" onclick="openTab(event, 'plotsPage')">Plots</button>
+            <button class="tabLinks" onclick="openTab(event, 'tablePage')">Table</button>
+            <button class="tabLinks" onclick="openTab(event, 'carbonDataPage')">Carbon Data</button>
+        </div>
+
+        <div class="tableContainer"> 
+            <table id="jobInfoTable" class="table_root">
+                <thead>
+                    <tr class="table_header">
+                        {% for header in jobInfoHeadings %}
+                        <th class="table_cell">{{ header }}</th>
+                        {% endfor %}
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for jobEvent in jobEvents %}
+                    <tr class="table_row">
+                        {% for cell in jobEvent %}
+                        <td class="table_cell">{{ cell }}</td>
+                        {% endfor %}
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+</body>
+
+<script type='text/javascript'>
+
+    $(document).ready(function () {
+        $('#jobInfoTable').DataTable({
+            columnDefs: [
+                {
+                    targets: "_all",
+                    className: 'dt-head-center'
+                }
+            ]
+        });
+    });
+
+    function openTab(e, tabName) {
+        switch (tabName) {
+            case "plotsPage":
+                window.location.replace("dashboard");
+                return;
+            case "tablePage":
+                window.location.replace("table");
+                return;
+            case "carbonDataPage":
+                window.location.replace("carbonData");
+                return;
+            default:
+                return;
+        }   
+    }
+
+</script>
+
+</html>

@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="../static/styles.css" />
+    <title>Dashboard</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/chartjs-plugin-annotation/2.2.1/chartjs-plugin-annotation.min.js"></script>
+</head>
+<body>
+    <div class="tabs">
+        <button class="tabLinks" onclick="openTab(event, 'plotsPage')">Plots</button>
+        <button class="tabLinks" onclick="openTab(event, 'tablePage')">Table</button>
+        <button class="tabLinks" onclick="openTab(event, 'carbonDataPage')">Carbon Data</button>
+    </div>
+    
+    <div class="chart-container" style="display:block; height:70vh; width:90vw">
+        <canvas id="emission_rates" style="margin-top:25px"></canvas>
+        <canvas id="emission_integral" style="margin-top:75px"></canvas>
+    </div>
+</body>
+
+<script type='text/javascript'>
+
+    const metadata = {
+        'emission_rates': {
+            'ylabel': 'gCO2/s',
+            'title': 'Instantaneous emission rates'
+        },
+        'emission_integral': {
+            'ylabel': 'gCO2',
+            'title': 'Emission integral over its duration'
+        },
+    }
+
+    const d_events = {
+        'input_transfer': {
+            'interval_keys': ["input_transfer_start", "input_transfer_end"],
+            'label': 'Input transfer',
+        },
+        'compute': {
+            'interval_keys': ["compute_start", "compute_end"],
+            'label': 'Compute',
+        },
+        'output_transfer': {
+            'interval_keys': ["output_transfer_start", "output_transfer_end"],
+            'label': 'Output transfer',
+        },
+    }
+
+    const d_timing_labels = {
+        "input_transfer_start": "Input transfer",
+        // "input_transfer_start": "Start of input transfer",
+        // "input_transfer_end": "End of input transfer",
+        "compute_start": "Compute",
+        // "compute_start": "Start of compute",
+        // "compute_end": "End of compute",
+        "output_transfer_start": "Output transfer",
+        // "output_transfer_start": "Start of output transfer",
+        // "output_transfer_end": "End of output transfer",
+    }
+
+    const colors = {
+        "Azure:eastus": {
+            "border": "rgb(220,20,60)",
+            "background": "rgba(220,20,60,0.25)"
+        },
+        "Azure:westus": {
+            "border": "rgb(0,191,255)",
+            "background": "rgba(0,191,255,0.25)"
+        }
+    }
+
+
+    const highlightComputeRegion = (ctx, lower, upper, df, color) => {
+        if (df["Timestamp"][ctx.p0DataIndex] > lower && df["Timestamp"][ctx.p0DataIndex] < upper) {
+            return color;
+        }
+        return "rgba(0, 0, 0, 0)";
+    };
+
+    const highlightTransferRegion = (ctx, inputLower, inputUpper, outputLower, outputUpper, df, color) => {
+        if (df["Timestamp"][ctx.p0DataIndex] > inputLower && df["Timestamp"][ctx.p0DataIndex] < inputUpper || 
+            df["Timestamp"][ctx.p0DataIndex] > outputLower && df["Timestamp"][ctx.p0DataIndex] < outputUpper) {
+            return color;
+        }
+        return "rgba(0, 0, 0, 0)";
+    }
+
+    window.onload = function() {
+        $.ajax({
+            url: "/carbonDataFig",
+            type: "get",
+            success: function (data) {
+                console.log(data);
+                
+                for (measurement in metadata) {
+                    let datasets = [];
+
+                    let options = {
+                        title: {
+                            display: true,
+                            text: metadata[measurement]["title"]
+                        },
+                        legend: {
+                            display: true,
+                            position: "right"
+                        },
+                        scales: {
+                            x: {
+                                scaleLabel: {
+                                    display: true,
+                                    labelString: "Time"
+                                },
+                                ticks: {
+                                    maxTicksLimit: 8
+                                }
+                            },
+                            y: {
+                                scaleLabel: {
+                                    display: true,
+                                    labelString: metadata[measurement]["ylabel"]
+                                }
+                            }
+                        },
+                        plugins: {
+                            annotation: {
+                                annotations: []
+                                
+                            }
+                        }
+                    }
+
+
+                    for (region in data[measurement]) {
+                        const compute_df = data[measurement][region]["compute_df"];
+                        const transfer_df = data[measurement][region]["transfer_df"];
+                        const timings_df = data[measurement][region]["timings_df"]
+
+                        for (key in Object.keys(compute_df["Timestamp"])) {
+                            let date = new Date(compute_df["Timestamp"][key]);
+                        }
+
+                        const startCompute = timings_df["compute_start"]["Timestamp"];
+                        const endCompute = timings_df["compute_end"]["Timestamp"];
+                        const startInputTransfer = timings_df["input_transfer_start"]["Timestamp"];
+                        const endInputTransfer = timings_df["input_transfer_end"]["Timestamp"];
+                        const startOutputTransfer = timings_df["output_transfer_start"]["Timestamp"];
+                        const endOutputTransfer = timings_df["output_transfer_end"]["Timestamp"];
+
+
+                        let fillColor = colors[region]["background"]
+                        datasets.push({
+                            label: region + " - Compute",
+                            data: Object.values(compute_df["Value"]),
+                            fill: true,
+                            stepped: true,
+                            borderColor: colors[region]["border"],
+                            segment: {
+                                backgroundColor: ctx => highlightComputeRegion(ctx, startCompute, endCompute, compute_df, fillColor)
+                            }
+                        });
+
+                        if (Object.keys(data[measurement][region]['transfer_df']['Timestamp']).length !== 0) {
+                            datasets.push({
+                                label: region + " - Transfer",
+                                data: Object.values(transfer_df["Value"]),
+                                fill: true,
+                                stepped: true,
+                                borderColor: colors[region]["border"],
+                                borderDash: [5,2],
+                                segment: {
+                                    backgroundColor: ctx => {
+                                        return highlightTransferRegion(ctx, startInputTransfer, endInputTransfer, startOutputTransfer, endOutputTransfer, compute_df, fillColor);
+                                    }
+                                }
+                            });
+                        }
+
+                        let max_y_value = Math.max(Math.max(...Object.values(compute_df["Value"])), Math.max(...Object.values(transfer_df["Value"])));
+                        let label;
+                        let xValue = 0;
+                        let df;
+                        let lowerTimestamp;
+
+                        for (event in d_events) {
+                            label = d_timing_labels[d_events[event]["interval_keys"][0]]
+
+                            if (event === "compute") {
+                                df = compute_df;
+                                lowerTimestamp = startCompute;
+                            } else {
+                                df = transfer_df;
+                                if (event == "input_transfer") {
+                                    lowerTimestamp = startInputTransfer;
+                                } else {
+                                    lowerTimestamp = startOutputTransfer;
+                                }
+                            }
+
+                            if (Object.keys(df['Timestamp']).length === 0) {
+                                continue;
+                            }
+
+                            let timestamps = Object.values(compute_df["Timestamp"]);
+                            for (let i = 0; i < timestamps.length; i++) {
+                                if (timestamps[i] >= lowerTimestamp) {
+                                    xValue = i;
+                                    break;
+                                }
+                            }
+
+                            options["plugins"]["annotation"]["annotations"].push({
+                                type: 'label',
+                                xValue: xValue,
+                                yValue: max_y_value,
+                                content: label,
+                                font: {
+                                    size: 10
+                                }
+                            });
+                        }
+                        
+                    }
+
+                    let timestampLabels = Object.values(data["emission_rates"]["Azure:eastus"]["compute_df"]["Timestamp"]);
+                    let displayLabels = timestampLabels.map(timestamp => {
+                        let date = new Date(timestamp);
+                        let month = date.getUTCMonth() + 1;
+                        let day = date.getUTCDate();
+                        let year = date.getUTCFullYear();
+                        let hour = date.getUTCHours();
+                        let minutes = (date.getUTCMinutes() < 10 ? "0" : "") + date.getUTCMinutes();
+
+                        let displayLabel = month + "/" + day + "/" + year + " " + hour + ":" + minutes;
+                        return displayLabel;
+                    })
+
+                    const chart = new Chart(measurement, {
+                        type: "line",
+                        data: {
+                            labels: displayLabels,
+                            datasets: datasets
+                        },
+                        options: options
+                    });
+
+                }
+            }
+        })
+    }
+
+    function openTab(e, tabName) {
+        switch (tabName) {
+            case "plotsPage":
+                window.location.replace("dashboard");
+                return;
+            case "tablePage":
+                window.location.replace("table");
+                return;
+            case "carbonDataPage":
+                return;
+            default:
+                return;
+        }   
+    }
+
+</script>
+
+</html>

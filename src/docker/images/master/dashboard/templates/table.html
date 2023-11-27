@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="../static/styles.css" />
+    <title>Table</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.datatables.net/v/bs5-5.3.0/datatables.min.css" rel="stylesheet">
+    
+    <link href="https://cdn.datatables.net/v/dt/dt-1.13.7/datatables.min.css" rel="stylesheet">
+ 
+    <script src="https://cdn.datatables.net/v/dt/dt-1.13.7/datatables.min.js"></script>
+</head>
+<body>    
+    <div class="container">
+
+        <div class="tabs">
+            <button class="tabLinks" onclick="openTab(event, 'plotsPage')">Plots</button>
+            <button class="tabLinks" onclick="openTab(event, 'tablePage')">Table</button>
+            <button class="tabLinks" onclick="openTab(event, 'carbonDataPage')">Carbon Data</button>
+        </div>
+
+        <div class="tableContainer">    
+            <table id="allJobsTable" class="table_root cell-border">
+                <thead>
+                    <tr class="table_header">
+                        {% for header in allJobsHeadings %}
+                        <th class="table_cell">{{ header }}</th>
+                        {% endfor %}
+                    </tr>
+                </thead>
+                <tbody>
+                {% for job in jobs %}
+                    <tr class="table_row">
+                        {% for cell in job %}
+                        {% set col_loop = loop %}
+
+                        {% if col_loop.index == 1 %}
+                        <td><a href="/table?jobId={{cell}}">{{ cell }}</a></td>
+
+                        {% else %}
+                        <td class="table_cell">{{ cell }}</td>
+
+                        {% endif %}                  
+                        {% endfor %}
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <div class="tableContainer">   
+            <table id="jobInfoTable" class="table_root">
+                <tr class="table_header">
+                    {% for header in jobInfoHeadings %}
+                    <th class="table_cell">{{ header }}</th>
+                    {% endfor %}
+                </tr>
+                {% for jobEvent in jobEvents %}
+                <tr class="table_row">
+                    {% for cell in jobEvent %}
+                    <td class="table_cell">{{ cell }}</td>
+                    {% endfor %}
+                </tr>
+                {% endfor %}
+            </table>
+        </div> 
+    </div>
+</body>
+
+<script type='text/javascript'>
+    $('#allJobsTable').DataTable({
+        columnDefs: [
+            {
+                targets: "_all",
+                className: 'dt-head-center'
+            }
+        ]
+    });
+    $(document).ready(function () {
+        jobInfoTable = document.getElementById("jobInfoTable");
+        console.log(jobInfoTable);
+        if (document.URL.indexOf("jobName=") !== -1) {
+            jobInfoTable.style.display = "inline-block";
+        } else {
+            jobInfoTable.style.display = "none";
+        }
+    });
+
+    $("#jobInput").keyup(function(event) {
+        if (event.keyCode === 13) {
+            $("#jobInputSubmit").click();
+        }
+    });
+
+    function changePage(event, location) {
+
+        let params = (new URL(document.location)).searchParams;
+        let page = parseInt(params.get("page"));
+        if (isNaN(page)) {
+            page = 1;
+        }
+        console.log(page);
+        if (location === "previous") {
+            if (page > 1) {
+                page = page - 1;
+                window.location.replace("table?page=" + page);
+            }
+        }
+        else {
+            page = page + 1;
+            window.location.replace("table?page=" + page);
+        }
+    }
+
+    window.onload = function() {
+        console.log("HI");
+    }
+
+
+    function searchJob(event) {
+        let jobName = document.getElementById("jobInput").value;
+
+        let jobFound = false;
+
+        $.ajax({
+            url: "/checkJob?jobName=" + jobName,
+            type: "get",
+            success: function (numRecords) {
+                numRecordsInt = parseInt(numRecords);
+                if (numRecords === 0) {
+                    jobNotFoundMessageContainer = document.getElementById("errorMessageContainer");
+                    jobNotFoundMessage = document.getElementById("errorMessage");
+                    jobNotFoundMessage.innerHTML = "No records with job name \"" + jobName + "\" were found";
+                    jobNotFoundMessageContainer.style.display = "block"
+
+                    document.getElementById("jobInfoTable").style.display = "none";
+                    return;
+                } else {
+                    jobFound = true;
+                    document.getElementById("errorMessageContainer").style.display = "none";
+                }
+                
+                const searchParams = new URLSearchParams(window.location.search);
+                newUrl = "table?";
+                if (searchParams.has("page")) {
+                    newUrl += "page=" + searchParams.get("page");
+                }
+                newUrl += "&jobName=" + jobName;
+                window.location.replace(newUrl);
+                document.getElementById("jobInfoTable").style.display = "block"
+
+            }
+        });
+    }
+
+    function openTab(e, tabName) {
+        switch (tabName) {
+            case "plotsPage":
+                window.location.replace("dashboard");
+                return;
+            case "tablePage":
+                return;
+            case "carbonDataPage":
+                window.location.replace("carbonData");
+                return;
+            default:
+                return;
+        }   
+    }
+
+</script>
+
+</html>
