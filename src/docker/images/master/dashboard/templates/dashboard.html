@@ -1,3 +1,5 @@
+{% from 'nav.html' import navBar %}
+
 <!DOCTYPE html>
 <html>
 <head lang="en">
@@ -9,11 +11,7 @@
 <body>    
     <div class="container">
 
-        <div class="tabs">
-            <button class="tabLinks" onclick="openTab(event, 'plotsPage')">Plots</button>
-            <button class="tabLinks" onclick="openTab(event, 'tablePage')">Table</button>
-            <button class="tabLinks" onclick="openTab(event, 'carbonDataPage')">Carbon Data</button>
-        </div>
+        {{ navBar() }}
 
         <div id="plotsPage" class="tabContent" style="width: 100%">
             <h3>Filter by Job Status</h3>
