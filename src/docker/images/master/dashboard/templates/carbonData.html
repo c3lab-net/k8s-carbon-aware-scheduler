@@ -1,19 +1,19 @@
+{% from 'nav.html' import navBar %}
+
 <!DOCTYPE html>
 <html>
 <head lang="en">
     <meta charset="UTF-8">
     <link rel="stylesheet" type="text/css" href="../static/styles.css" />
-    <title>Dashboard</title>
+    <title>Carbon Data</title>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/chartjs-plugin-annotation/2.2.1/chartjs-plugin-annotation.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/date-fns/1.30.1/date_fns.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
 </head>
 <body>
-    <div class="tabs">
-        <button class="tabLinks" onclick="openTab(event, 'plotsPage')">Plots</button>
-        <button class="tabLinks" onclick="openTab(event, 'tablePage')">Table</button>
-        <button class="tabLinks" onclick="openTab(event, 'carbonDataPage')">Carbon Data</button>
-    </div>
+    {{ navBar() }}
     
     <div class="chart-container" style="display:block; height:70vh; width:90vw">
         <canvas id="emission_rates" style="margin-top:25px"></canvas>
@@ -109,12 +109,20 @@
                         },
                         scales: {
                             x: {
+                                type: "time",
+                                time: {
+                                    unit: 'hour',
+                                    stepSize: 2,
+                                    displayFormats: {
+                                        "hour": "MM-dd hh:mm aa"
+                                    }
+                                },
                                 scaleLabel: {
                                     display: true,
                                     labelString: "Time"
                                 },
                                 ticks: {
-                                    maxTicksLimit: 8
+                                    beginAtZero: true
                                 }
                             },
                             y: {
@@ -154,6 +162,7 @@
                         datasets.push({
                             label: region + " - Compute",
                             data: Object.values(compute_df["Value"]),
+                            pointRadius: 0,
                             fill: true,
                             stepped: true,
                             borderColor: colors[region]["border"],
@@ -166,6 +175,7 @@
                             datasets.push({
                                 label: region + " - Transfer",
                                 data: Object.values(transfer_df["Value"]),
+                                pointRadius: 0,
                                 fill: true,
                                 stepped: true,
                                 borderColor: colors[region]["border"],
@@ -181,21 +191,28 @@
                         let max_y_value = Math.max(Math.max(...Object.values(compute_df["Value"])), Math.max(...Object.values(transfer_df["Value"])));
                         let label;
                         let xValue = 0;
+                        let yValue = 0;
                         let df;
                         let lowerTimestamp;
+                        let upperTimestamp;
 
                         for (event in d_events) {
+                            let xAdjust = 300;
                             label = d_timing_labels[d_events[event]["interval_keys"][0]]
 
                             if (event === "compute") {
                                 df = compute_df;
                                 lowerTimestamp = startCompute;
+                                upperTimestamp = endCompute;
                             } else {
                                 df = transfer_df;
                                 if (event == "input_transfer") {
                                     lowerTimestamp = startInputTransfer;
+                                    upperTimestamp = endInputTransfer;
+                                    xAdjust = xAdjust * -1;
                                 } else {
                                     lowerTimestamp = startOutputTransfer;
+                                    upperTimestamp = endOutputTransfer;
                                 }
                             }
 
@@ -203,10 +220,12 @@
                                 continue;
                             }
 
-                            let timestamps = Object.values(compute_df["Timestamp"]);
+                            let timestamps = Object.values(df["Timestamp"]);
+                            let values = Object.values(df["Value"]);
                             for (let i = 0; i < timestamps.length; i++) {
-                                if (timestamps[i] >= lowerTimestamp) {
-                                    xValue = i;
+                                if (timestamps[i] >= lowerTimestamp + ((upperTimestamp - lowerTimestamp) / 2)) {
+                                    xValue = new Date(timestamps[i]);
+                                    yValue = values[i] / 1.25;
                                     break;
                                 }
                             }
@@ -214,10 +233,17 @@
                             options["plugins"]["annotation"]["annotations"].push({
                                 type: 'label',
                                 xValue: xValue,
-                                yValue: max_y_value,
+                                yValue: yValue,
+                                xAdjust: xAdjust,
+                                yAdjust: -20,
+                                backgroundColor: 'rgba(200,200,200,.5)',
                                 content: label,
                                 font: {
                                     size: 10
+                                },
+                                callout: {
+                                    display: true,
+                                    side: 10
                                 }
                             });
                         }
@@ -240,7 +266,7 @@
                     const chart = new Chart(measurement, {
                         type: "line",
                         data: {
-                            labels: displayLabels,
+                            labels: timestampLabels,
                             datasets: datasets
                         },
                         options: options
