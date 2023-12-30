@@ -127,7 +127,7 @@ class Dashboard(Resource):
         x_num_jobs = jobs_sampled.index
         y_num_jobs = jobs_sampled['job_added']
         num_jobs_df = pd.DataFrame({'Time': x_num_jobs, '# of Jobs': y_num_jobs})
-        num_jobs_fig = px.line(num_jobs_df,x='Time',y='# of Jobs', title='Jobs', width=1800)
+        num_jobs_fig = px.line(num_jobs_df,x='Time',y='# of Jobs', title='Jobs', width=1500)
         num_jobs_fig.update_layout(title_x=0.5)
         num_jobs_fig.update_xaxes(rangeslider_visible=True)
 
@@ -135,7 +135,7 @@ class Dashboard(Resource):
         x_num_cores = jobs_sampled.index
         y_num_cores = jobs_sampled['cores_added']
         num_cores_df = pd.DataFrame({'Time': x_num_cores, '# of Cores': y_num_cores})
-        num_cores_fig = px.line(num_cores_df,x='Time',y='# of Cores', title='Cores', width=1800)
+        num_cores_fig = px.line(num_cores_df,x='Time',y='# of Cores', title='Cores', width=1500)
         num_cores_fig.update_layout(title_x=0.5)
         num_cores_fig.update_xaxes(rangeslider_visible=True)
         
