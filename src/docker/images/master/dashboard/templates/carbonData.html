@@ -4,6 +4,7 @@
 <html>
 <head lang="en">
     <meta charset="UTF-8">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="../static/styles.css" />
     <title>Carbon Data</title>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
@@ -13,11 +14,13 @@
     <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
 </head>
 <body>
-    {{ navBar() }}
-    
-    <div class="chart-container" style="display:block; height:70vh; width:90vw">
-        <canvas id="emission_rates" style="margin-top:25px"></canvas>
-        <canvas id="emission_integral" style="margin-top:75px"></canvas>
+    <div class="container">
+        {{ navBar() }}
+        
+        <div class="chart-container" style="display:block; height:70vh; width:90vw">
+            <canvas id="emission_rates" style="margin-top:25px"></canvas>
+            <canvas id="emission_integral" style="margin-top:75px"></canvas>
+        </div>
     </div>
 </body>
 
@@ -93,7 +96,6 @@
             url: "/carbonDataFig",
             type: "get",
             success: function (data) {
-                console.log(data);
                 
                 for (measurement in metadata) {
                     let datasets = [];
@@ -197,7 +199,7 @@
                         let upperTimestamp;
 
                         for (event in d_events) {
-                            let xAdjust = 300;
+                            let xAdjust = 200;
                             label = d_timing_labels[d_events[event]["interval_keys"][0]]
 
                             if (event === "compute") {
