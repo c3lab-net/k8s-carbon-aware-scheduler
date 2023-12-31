@@ -4,13 +4,13 @@
 <html>
 <head lang="en">
     <meta charset="UTF-8">
+    <title>Jobs Table</title>
+    <script type="text/javascript" src="{{ url_for('static', filename='util.js') }}"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="../static/styles.css" />
-    <title>Jobs Table</title>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     
     <link href="https://cdn.datatables.net/v/dt/dt-1.13.7/datatables.min.css" rel="stylesheet">
- 
     <script src="https://cdn.datatables.net/v/dt/dt-1.13.7/datatables.min.js"></script>
 </head>
 <body>    
@@ -82,6 +82,8 @@
         } else {
             jobInfoTable.style.display = "none";
         }
+
+        test();
     });
 
     $("#jobInput").keyup(function(event) {
@@ -144,21 +146,6 @@
 
             }
         });
-    }
-
-    function openTab(e, tabName) {
-        switch (tabName) {
-            case "plotsPage":
-                window.location.replace("dashboard");
-                return;
-            case "tablePage":
-                return;
-            case "carbonDataPage":
-                window.location.replace("carbonData");
-                return;
-            default:
-                return;
-        }   
     }
 
 </script>
