@@ -62,7 +62,7 @@ class Dashboard(Resource):
         x_num_cores = cores_sampled.index
         y_num_cores = cores_sampled['num_cores']
         num_cores_df = pd.DataFrame({'Time': x_num_cores, '# of Cores': y_num_cores})
-        num_cores_fig = px.line(num_cores_df, x='Time', y='# of Cores', title='Cores')
+        num_cores_fig = px.line(num_cores_df, x='Time', y='# of Cores', title='Cores', width=1500)
         num_cores_fig.update_layout(title_x=0.5)
         num_cores_fig.update_xaxes(rangeslider_visible=True)
 
@@ -96,7 +96,7 @@ class Dashboard(Resource):
         x_num_jobs = jobs_sampled.index
         y_num_jobs = jobs_sampled['num_jobs']
         num_jobs_df = pd.DataFrame({'Time': x_num_jobs, '# of Jobs': y_num_jobs})
-        num_jobs_fig = px.line(num_jobs_df, x='Time' ,y='# of Jobs', title='Jobs')
+        num_jobs_fig = px.line(num_jobs_df, x='Time' ,y='# of Jobs', title='Jobs', width=1500)
         num_jobs_fig.update_layout(title_x=0.5)
         num_jobs_fig.update_xaxes(rangeslider_visible=True)
 
@@ -158,39 +158,11 @@ class Dashboard(Resource):
                 fetch_result=True)
         columns = ["event", "time", "job_config"]
         df = postgres_to_dataframe(result, columns)
-        #df['time'] = pd.to_datetime(df['time'])
         
         df['job_added'] = df.apply(add_number_jobs, axis=1)
         df['cores_added'] = df.apply(add_number_cores, axis=1)
         testdf = df[['time', 'event', 'job_added', 'cores_added']]
         df = df.drop('job_config', axis=1)
-        return df
-    
-        
-    
-    def get_all_jobs_history_df(self):
-        cursor = self.dbconn.cursor()
-        result = psql_execute_list(
-                cursor,
-                "SELECT *, time AT TIME ZONE 'America/Los_Angeles' FROM public.jobhistory",
-                fetch_result=True)
-        columns = ["job_id", "event", "time_with_time_zone", "origin", "time"]
-        df = postgres_to_dataframe(result, columns)
-        df['time'] = pd.to_datetime(df['time'])
-        #df = df.drop_duplicates(subset=['job_id'])
-        df = df.drop(columns=['time_with_time_zone', 'origin'])
-        #count = [1 for i in range(df.shape[0])]
-        df['job_added'] = df.apply(add_number_jobs, axis=1)
-        #df.insert(3, "count", count, True)
-        return df
-
-    def get_all_job_configs_df(self):
-        cursor = self.dbconn.cursor()
-        result = psql_execute_list(
-                cursor,
-                "SELECT * from public.jobconfig",
-                fetch_result=True)
-        df = postgres_to_dataframe(result, ['job_id', 'job_config'])
         return df
 
 
