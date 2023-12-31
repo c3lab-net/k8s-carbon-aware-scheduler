@@ -2,6 +2,7 @@
     overflow: hidden;
     border: 1px solid #ccc;
     background-color: #f1f1f1;
+    margin-bottom: 50px;
 }
 
 .tabs button {
@@ -14,11 +15,11 @@
     transition: 0.3s;
 }
 
-.tab button:hover {
+button:hover.tab {
     background-color: #ddd;
 }
 
-.tab button.active {
+button:active.tab {
     background-color: #ccc;
 }
 
@@ -68,6 +69,11 @@
     margin: 20px;
 }
 
-.dt-body-right{
+.dt-body-right {
     text-align: center;
+}
+
+.chart-container {
+    margin: auto;
+    width: 100%;
 }
